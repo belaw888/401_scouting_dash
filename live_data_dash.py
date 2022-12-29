@@ -15,6 +15,7 @@ import numpy
 log.basicConfig(level=log.DEBUG)
 
 app = Dash(__name__)
+server = app.server
 
 event_key = '2022varr'
 # lookup.new_team_season_data_json(event_key)
