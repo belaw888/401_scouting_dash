@@ -1,0 +1,756 @@
+{
+    "frc1086": {
+        "profile": {
+            "team_number": 1086,
+            "nickname": "Blue Cheese",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    4,
+                    26,
+                    1,
+                    1,
+                    10
+                ]
+            }
+        }
+    },
+    "frc122": {
+        "profile": {
+            "team_number": 122,
+            "nickname": "NASA Knights",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    1,
+                    31,
+                    1,
+                    0,
+                    13
+                ]
+            }
+        }
+    },
+    "frc1599": {
+        "profile": {
+            "team_number": 1599,
+            "nickname": "CircuiTree",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    3,
+                    8,
+                    19,
+                    8
+                ]
+            }
+        }
+    },
+    "frc1610": {
+        "profile": {
+            "team_number": 1610,
+            "nickname": "\u26f4 Blackwater Robotics \u26f4",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    6,
+                    30,
+                    1,
+                    1,
+                    10
+                ]
+            }
+        }
+    },
+    "frc1793": {
+        "profile": {
+            "team_number": 1793,
+            "nickname": "The Aviators",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    18,
+                    0,
+                    0,
+                    8
+                ]
+            }
+        }
+    },
+    "frc1908": {
+        "profile": {
+            "team_number": 1908,
+            "nickname": "ShoreBots",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    9,
+                    13,
+                    0,
+                    1,
+                    13
+                ]
+            }
+        }
+    },
+    "frc2028": {
+        "profile": {
+            "team_number": 2028,
+            "nickname": "Phantom Robotics",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    3,
+                    9,
+                    0,
+                    0,
+                    17
+                ]
+            }
+        }
+    },
+    "frc2363": {
+        "profile": {
+            "team_number": 2363,
+            "nickname": "Triple Helix Robotics",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    22,
+                    41,
+                    0,
+                    5,
+                    35
+                ]
+            }
+        }
+    },
+    "frc2642": {
+        "profile": {
+            "team_number": 2642,
+            "nickname": "Pitt Pirates",
+            "state_prov": "North Carolina",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    1,
+                    19,
+                    12,
+                    24,
+                    15
+                ]
+            }
+        }
+    },
+    "frc2890": {
+        "profile": {
+            "team_number": 2890,
+            "nickname": "The Hawk Collective",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    4,
+                    0,
+                    0,
+                    16
+                ]
+            }
+        }
+    },
+    "frc3136": {
+        "profile": {
+            "team_number": 3136,
+            "nickname": "Official Robotics Constructors of Ashland",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    2,
+                    20,
+                    0,
+                    0,
+                    19
+                ]
+            }
+        }
+    },
+    "frc3359": {
+        "profile": {
+            "team_number": 3359,
+            "nickname": "Royal Robotics",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    7,
+                    0,
+                    0,
+                    19
+                ]
+            }
+        }
+    },
+    "frc339": {
+        "profile": {
+            "team_number": 339,
+            "nickname": "Kilroy Robotics",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    },
+    "frc346": {
+        "profile": {
+            "team_number": 346,
+            "nickname": "RoboHawks",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    12,
+                    5,
+                    23,
+                    13
+                ]
+            }
+        }
+    },
+    "frc3737": {
+        "profile": {
+            "team_number": 3737,
+            "nickname": "Roto Raptors",
+            "state_prov": "North Carolina",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    6,
+                    3,
+                    33,
+                    20
+                ]
+            }
+        }
+    },
+    "frc384": {
+        "profile": {
+            "team_number": 384,
+            "nickname": "SPARKY 384",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    11,
+                    23,
+                    1,
+                    1,
+                    7
+                ]
+            }
+        }
+    },
+    "frc401": {
+        "profile": {
+            "team_number": 401,
+            "nickname": "Copperhead Robotics",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    6,
+                    24,
+                    8,
+                    3,
+                    14
+                ]
+            }
+        }
+    },
+    "frc422": {
+        "profile": {
+            "team_number": 422,
+            "nickname": "The Mech Tech Dragons",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    5,
+                    4,
+                    16,
+                    16
+                ]
+            }
+        }
+    },
+    "frc435": {
+        "profile": {
+            "team_number": 435,
+            "nickname": "Robodogs",
+            "state_prov": "North Carolina",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    7,
+                    0,
+                    0,
+                    19
+                ]
+            }
+        }
+    },
+    "frc4561": {
+        "profile": {
+            "team_number": 4561,
+            "nickname": "TerrorBytes",
+            "state_prov": "North Carolina",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    1,
+                    6,
+                    12,
+                    35,
+                    27
+                ]
+            }
+        }
+    },
+    "frc5804": {
+        "profile": {
+            "team_number": 5804,
+            "nickname": "TORCH",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    1,
+                    9,
+                    6,
+                    36,
+                    10
+                ]
+            }
+        }
+    },
+    "frc619": {
+        "profile": {
+            "team_number": 619,
+            "nickname": "Cavalier Robotics",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    19,
+                    0,
+                    0,
+                    5
+                ]
+            }
+        }
+    },
+    "frc6194": {
+        "profile": {
+            "team_number": 6194,
+            "nickname": "The Aftershocks",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    19,
+                    0,
+                    0,
+                    18
+                ]
+            }
+        }
+    },
+    "frc836": {
+        "profile": {
+            "team_number": 836,
+            "nickname": "The RoboBees",
+            "state_prov": "Maryland",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    1,
+                    9,
+                    32,
+                    6,
+                    12
+                ]
+            }
+        }
+    },
+    "frc8590": {
+        "profile": {
+            "team_number": 8590,
+            "nickname": "CAVBOTICS",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    6,
+                    7,
+                    0,
+                    0,
+                    17
+                ]
+            }
+        }
+    },
+    "frc900": {
+        "profile": {
+            "team_number": 900,
+            "nickname": "The Zebracorns",
+            "state_prov": "North Carolina",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    7,
+                    7,
+                    33,
+                    4
+                ]
+            }
+        }
+    },
+    "frc9003": {
+        "profile": {
+            "team_number": 9003,
+            "nickname": "TuTu Turtles",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    },
+    "frc9010": {
+        "profile": {
+            "team_number": 9010,
+            "nickname": "CrabBots",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    },
+    "frc977": {
+        "profile": {
+            "team_number": 977,
+            "nickname": "Cometbots",
+            "state_prov": "Virginia",
+            "country": "USA"
+        },
+        "season_data": {
+            "endgame_results": {
+                "level": [
+                    "Low",
+                    "Mid",
+                    "High",
+                    "Traversal",
+                    "None"
+                ],
+                "climbs": [
+                    0,
+                    11,
+                    4,
+                    3,
+                    6
+                ]
+            }
+        }
+    }
+}
