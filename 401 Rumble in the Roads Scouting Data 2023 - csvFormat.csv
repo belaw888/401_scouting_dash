@@ -1,0 +1,176 @@
+Initials,Team Number,Match Number,Robot Position,Starting Location,No Show,Taxied,Auto Upper Hub Scored,Auto Upper Hub Missed,Auto Lower Hub Scored,Upper Hub Scored,Lower Hub Scored,Was Defended,Climb,Robot Disabled?,Comments
+ZO,422,1,Blue 1,Left,FALSE,TRUE,2,0,0,17,0,FALSE,Traversal,FALSE,brief 3 carry dk if fouled
+IB,9998,1,Red 2,Left,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,9998 is a pure defense bot. They have no arms or shooters/intake. Climbing and scoring cargo is literally impossible for them.
+PC,2363,1,Blue 2,Right,FALSE,TRUE,4,0,0,5,0,FALSE,Low,FALSE,
+Cm,3737,1,Red 3,Middle,FALSE,TRUE,0,0,1,0,6,FALSE,Medium,FALSE,Top heavy. Good climber 
+RO,2890,1,Blue 3,Middle,FALSE,TRUE,2,0,0,0,0,TRUE,NA,FALSE,They picked up the wrong balls and they kinda just went everywhere
+Dcd :),900,1,Red 1,Right,FALSE,TRUE,0,1,0,1,0,FALSE,Medium,FALSE,"Shot a lot of balls, only scored once. Also climber committed die."
+ZO,1086,2,Blue 1,Right,FALSE,TRUE,0,2,0,0,0,FALSE,Medium,FALSE,"intake no spin, played mid d"
+PV,3136,2,Blue 2,Left,FALSE,TRUE,1,0,0,10,0,FALSE,Failed,FALSE,
+Dcd :),384,2,Red 1,Left,FALSE,TRUE,2,0,0,12,0,FALSE,Medium,FALSE,"Never missed a shot, but needs to be close to the hoop to shoot"
+IB,401,2,Red 2,Right,FALSE,TRUE,3,0,1,10,0,FALSE,High,FALSE,
+Cm,9999,2,Red 3,Left,FALSE,TRUE,0,0,1,0,0,FALSE,NA,FALSE,Ineffective defense went to climb but blocked by dumb 401
+IB,9991,3,Red 2,Right,TRUE,FALSE,0,0,0,0,0,FALSE,NA,TRUE,Took a good ol’ no show
+ZO,438,3,Blue 1,Left,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,
+Dcd :),679,3,Red 1,Right,FALSE,TRUE,0,4,0,0,0,FALSE,NA,FALSE,Consistently overshot
+Cm,346,3,Red 3,Left,FALSE,TRUE,0,1,0,5,0,FALSE,NA,FALSE,Missed alot
+GH,2028,3,Blue 2,Middle,FALSE,TRUE,0,0,0,3,0,FALSE,NA,FALSE,
+PV,339,4,Blue 1,Middle,FALSE,TRUE,0,1,0,0,0,FALSE,NA,FALSE,yikes
+Cm,977,4,Red 3,Right,FALSE,TRUE,2,0,0,6,0,FALSE,Traversal,FALSE,Solid choice
+GH,1599,4,Blue 2,Left,FALSE,FALSE,0,0,0,2,0,FALSE,NA,TRUE,
+IB,4561,4,Red 2,Middle,FALSE,FALSE,0,0,0,2,0,FALSE,NA,FALSE,"No auto code, not even a taxi. Once, they “scored” blue cargo. No climb attempted. Seemed to mostly be defense bot."
+RO,2642,4,Blue 3,Right,FALSE,TRUE,0,2,0,2,0,FALSE,Failed,FALSE,Slightly off when shooting 
+Dcd :),6194,4,Red 1,Left,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,Undershot
+RO,122,3,Blue 3,Right,FALSE,TRUE,1,0,0,11,0,FALSE,Low,FALSE,Can only do low bar
+RO,8590,2,Blue 3,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,NA,TRUE,Got disconnected 
+ZO,1793,5,Blue 1,Right,FALSE,FALSE,0,0,2,0,1,FALSE,NA,FALSE,
+Cm,1908,5,Red 3,Left,FALSE,TRUE,0,0,0,9,0,FALSE,NA,FALSE,
+Dcd :),3359,5,Red 1,Middle,FALSE,TRUE,1,0,0,3,0,FALSE,Failed,FALSE,Top-heavy boi
+ML,1610,5,Blue 2,Left,FALSE,TRUE,0,0,1,1,7,FALSE,Low,FALSE,kept running into the hub 
+IB,836,5,Red 2,Right,FALSE,TRUE,2,2,0,10,0,TRUE,NA,TRUE,They stopped moving a few seconds before climb time
+PC,5804,5,Blue 3,Middle,FALSE,TRUE,0,2,0,6,0,FALSE,High,FALSE,"Driver looks really good, missed a lot of shots at the start"
+ZO,2363,6,Blue 1,Right,FALSE,TRUE,3,0,0,5,0,FALSE,NA,FALSE,
+Cm,401,6,Red 3,Left,FALSE,TRUE,2,0,0,13,0,TRUE,Traversal,FALSE,
+ML,122,6,Blue 2,Left,FALSE,TRUE,0,0,0,0,0,TRUE,Failed,FALSE,
+TR,422,6,Red 1,Right,FALSE,TRUE,2,0,0,5,0,TRUE,Traversal,FALSE,Seemed to have slight connection issues and was pushed around
+Dcd :),422,,Red 1,Left,FALSE,TRUE,2,0,0,5,0,FALSE,Traversal,FALSE,"Nice shooting, shooter prolly died midgame"
+RO,900,6,Blue 3,Middle,FALSE,TRUE,2,0,0,4,0,FALSE,Failed,FALSE,"Did one ball at a time for shooting, swerve is nice"
+GC,1086,6,Red 2,Right,FALSE,TRUE,0,2,1,0,0,FALSE,Medium,FALSE,Fairly good defense against 2363. Didn't shoot but held blue balls whole game
+ZO,9999,7,Blue 1,Left,FALSE,TRUE,0,0,1,0,4,FALSE,NA,FALSE,
+GC,977,7,Red 2,Right,FALSE,TRUE,0,0,0,6,2,FALSE,Medium,FALSE,Fast but not the most accurate. Starting climbing early 
+Dcd :),346,7,Red 1,Middle,FALSE,TRUE,1,0,0,4,0,FALSE,NA,FALSE,Weak shooter
+Cm,2028,7,Red 3,Middle,FALSE,TRUE,0,1,0,5,0,FALSE,Medium,FALSE,Slow robot 
+ML,9998,7,Blue 2,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,
+TR,346,7,Red 1,Left,FALSE,TRUE,1,1,0,8,0,TRUE,NA,FALSE,Got consistently pushed around 
+RO,6194,7,Blue 3,Left,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,"The intake did not work at all, shooting was disorganized, and did not climb "
+TR,3737,8,Red 1,Middle,FALSE,TRUE,0,0,0,0,9,FALSE,Traversal,FALSE,"Great climber, only shoots low, drivers seemed to have trouble lining up shots"
+ML,836,8,Blue 2,Right,FALSE,TRUE,2,0,0,8,0,FALSE,High,FALSE,
+ZO,8590,8,Blue 1,Middle,FALSE,TRUE,0,2,0,4,0,FALSE,Low,FALSE,
+RO,435,8,Blue 3,Left,FALSE,TRUE,0,0,0,0,1,FALSE,Failed,FALSE,Could not get anything in the intake
+Cm,3359,8,Red 3,Right,FALSE,FALSE,0,1,1,1,1,FALSE,Medium,FALSE,Programming difficulties 
+GC,339,8,Red 2,Left,FALSE,TRUE,0,1,0,1,0,FALSE,NA,FALSE,Extremely slow cycle. Slow not in general 
+Dcd :),3737,,Red 1,Left,FALSE,TRUE,0,0,0,0,8,FALSE,Traversal,FALSE,
+ZO,3136,9,Blue 1,Left,FALSE,TRUE,1,1,0,5,1,FALSE,NA,FALSE,
+ML,2642,9,Blue 2,Right,FALSE,TRUE,2,0,0,3,0,FALSE,Medium,FALSE,
+Dcd,1599,,Red 1,Left,FALSE,TRUE,1,0,0,1,0,FALSE,Failed,TRUE,Died
+RO,619,9,Blue 3,Middle,FALSE,TRUE,1,1,0,6,0,FALSE,Medium,FALSE,Pretty okay shooter
+TR,1599,9,Red 1,Left,FALSE,TRUE,0,0,0,0,0,TRUE,Failed,TRUE,Had a lot of connection issues and was defended
+Cm,1610,9,Red 3,Middle,FALSE,TRUE,0,1,0,0,10,FALSE,Failed,FALSE,Blocked by teammates 
+GC,1908,9,Red 2,Right,FALSE,TRUE,0,0,0,9,0,FALSE,Failed,FALSE,Decent bot
+ZO,4561,10,Blue 1,Left,TRUE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,
+TR,9991,10,Red 1,Right,FALSE,TRUE,2,0,0,0,0,TRUE,High,TRUE,Lost connection. Shooter very inaccurate 
+GH,5804,10,Blue 2,Right,FALSE,TRUE,0,1,0,3,1,FALSE,Medium,FALSE,
+Cm,1793,10,Red 3,Middle,FALSE,TRUE,0,1,0,0,1,FALSE,Low,FALSE,
+GC,384,10,Red 1,Left,FALSE,TRUE,1,1,0,12,0,FALSE,Medium,FALSE,Muy bueno 
+PC,2890,10,Blue 3,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,Failed,FALSE,Did not intake a ball but was not disabled
+PC,9998,11,Blue 3,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,
+ZO,435,11,Blue 1,Left,FALSE,TRUE,0,0,0,0,0,FALSE,Medium,FALSE,
+GH,3359,11,Blue 2,Left,FALSE,TRUE,0,1,0,0,1,FALSE,NA,FALSE,
+Cm,9999,11,Red 3,Right,FALSE,TRUE,0,0,1,0,3,FALSE,Failed,FALSE,
+IB,900,11,Red 2,Left,FALSE,TRUE,1,1,0,2,-1,FALSE,Failed,FALSE,They missed most of their shots. The reason lower hub is negative is because they shot some blue cargo into it.
+EF,401,11,Red 1,Right,FALSE,TRUE,1,1,1,1,1,FALSE,Medium,FALSE,Not very accurate on teleop stage. 
+ZO,836,12,Blue 1,Right,FALSE,TRUE,0,0,0,9,0,FALSE,NA,TRUE,lost power 
+Cm,1908,12,Red 3,Right,FALSE,FALSE,1,1,0,11,0,FALSE,Low,FALSE,
+IB,122,12,Red 2,Middle,FALSE,TRUE,1,2,0,3,0,FALSE,Medium,FALSE,"Lots of defending, not a ton of scoring."
+PV,6194,12,Blue 3,Left,FALSE,TRUE,0,0,0,2,0,TRUE,NA,FALSE,Defended by 122
+GH,1599,12,Blue 2,Middle,FALSE,TRUE,0,1,0,3,0,FALSE,Medium,FALSE,
+EF,3136,12,Red 1,Left,FALSE,TRUE,1,1,0,8,0,FALSE,Medium,FALSE,"A little slow, but accurate with the few shots it took. Intake looks flimsy but works well, looked smooth on the climb but an interesting way of doing so."
+IB,619,13,Red 2,Left,FALSE,TRUE,1,1,0,6,0,FALSE,Medium,FALSE,619 seems to be slower but (somewhat) more precise.
+PV,977,13,Blue 3,Right,FALSE,TRUE,0,0,0,3,0,FALSE,Failed,FALSE,
+ZO,5804,13,Blue 1,Middle,FALSE,FALSE,1,1,0,0,1,FALSE,Medium,FALSE,
+GH,3737,13,Blue 2,Left,FALSE,FALSE,0,0,1,0,6,FALSE,Traversal,FALSE,
+Cm,1793,13,Red 3,Right,FALSE,FALSE,0,0,1,0,0,FALSE,Low,FALSE,
+EF,401,13,Red 1,Middle,FALSE,TRUE,3,0,0,8,0,FALSE,Medium,FALSE,Didn’t complete full auto commands. Failed to do full climb.
+ZO,384,14,Blue 1,Right,FALSE,TRUE,3,0,0,6,0,FALSE,Medium,FALSE,
+Cm,2028,14,Red 3,Middle,FALSE,TRUE,1,0,0,0,0,FALSE,Medium,FALSE,
+GH,4561,14,Blue 2,Middle,FALSE,FALSE,0,0,0,10,0,FALSE,NA,FALSE,
+PV,339,14,Blue 3,Left,FALSE,FALSE,0,0,0,0,0,TRUE,NA,FALSE,DID NOT SHOOT OR TAXI
+IB,422,14,Red 2,Right,FALSE,TRUE,3,0,0,9,0,TRUE,Traversal,FALSE,"As expected, a wonderful show from the Mech Tech Copperheads"
+EF,1610,14,Red 1,Left,FALSE,TRUE,1,1,0,0,10,FALSE,Failed,FALSE,Was fast but wobbly at quick stops. Climbing attempt had issues with the arms raising and giving themselves enough time to attempt the climb.
+PC,2363,15,Blue 3,Right,FALSE,TRUE,4,0,0,2,0,TRUE,Failed,FALSE,
+ZO,8590,15,Blue 1,Middle,FALSE,FALSE,1,0,0,0,0,FALSE,NA,TRUE,bad
+GH,346,15,Blue 2,Left,FALSE,TRUE,2,0,0,2,0,FALSE,Medium,FALSE,
+IB,9991,15,Red 2,Right,FALSE,TRUE,3,0,0,1,0,FALSE,Failed,FALSE,Most definitely a defense bot
+Cm,2642,15,Red 3,Left,FALSE,FALSE,1,1,0,6,0,FALSE,Medium,FALSE,Fell off traverse styled out to medium
+EF,2890,15,Red 1,Middle,FALSE,TRUE,0,1,0,5,0,FALSE,Medium,FALSE,Climbed quickly but everything else was slow. Took a while to shoot to the upper hub with about 70% accuracy. However was a large slow moving bot that could still get knocked around. Very slow on turns.
+TR,122,16,Red 1,Middle,FALSE,TRUE,3,0,0,0,0,FALSE,NA,TRUE,Robot lost connection and shooter may be broken
+PC,3737,16,Blue 1,Middle,FALSE,TRUE,0,0,0,0,8,FALSE,Traversal,FALSE,Swerve
+GC,6194,16,Red 2,Left,FALSE,TRUE,0,1,0,0,1,FALSE,NA,FALSE,Bad aim
+Cm,1086,16,Red 3,Right,FALSE,TRUE,2,0,0,3,1,TRUE,NA,FALSE,Thier experienced driver knows how to farm points
+GH,1793,16,Red 1,Right,FALSE,TRUE,0,0,0,0,0,FALSE,Failed,FALSE,
+PV,3136,16,Blue 3,Left,FALSE,TRUE,1,1,0,7,0,FALSE,Medium,FALSE,
+ZO,339,17,Blue 1,Middle,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,
+GH,9999,17,Blue 2,Right,FALSE,TRUE,0,0,1,0,2,FALSE,NA,FALSE,
+Cm,5804,17,Red 3,Right,FALSE,FALSE,1,0,0,5,0,FALSE,Medium,FALSE,
+TR,384,17,Red 2,Right,FALSE,TRUE,3,0,0,11,0,TRUE,Low,FALSE,"Shooter incredibly accurate, was pushed around"
+PC,339,17,Blue 1,Middle,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,Played ok defense
+GC,1908,17,Red 1,Left,FALSE,TRUE,0,0,0,5,2,TRUE,Failed,FALSE,Fairly slow
+PV,619,17,Blue 3,Left,FALSE,TRUE,1,1,0,6,0,FALSE,High,FALSE,Hung with 1 arm
+TR,2028,18,Red 2,Middle,FALSE,TRUE,2,0,0,1,0,TRUE,Medium,FALSE,
+ZO,346,18,Blue 3,Left,FALSE,,2,0,0,0,0,FALSE,High,FALSE,
+PV,3359,18,Blue 1,Right,FALSE,TRUE,0,1,0,0,0,FALSE,Failed,FALSE,
+Cm,2363,18,Red 3,Middle,FALSE,TRUE,5,0,0,3,0,FALSE,NA,FALSE,They accidentally got stuck in blue climber and got lots of fouls
+PC,2890,18,Blue 2,Middle,FALSE,TRUE,1,0,0,1,0,FALSE,Low,FALSE,Got autotraversal bc of 2363 in their hangar. Climbed low
+GC,1599,18,Red 1,Left,FALSE,TRUE,1,1,0,3,0,FALSE,Medium,FALSE,Not very accurate 
+TR,435,19,Red 2,Right,FALSE,FALSE,0,0,1,0,3,TRUE,NA,TRUE,"Feeding system inefficient, took far too long to line up shot"
+ZO,836,19,Blue 3,Left,FALSE,FALSE,0,0,0,13,0,FALSE,Medium,FALSE,
+GC,2642,19,Red 1,Left,FALSE,TRUE,1,1,0,3,1,FALSE,High,FALSE,He do be wobbly tho
+Cm,4561,19,Red 3,Middle,FALSE,FALSE,0,0,0,14,0,FALSE,NA,FALSE,I love this bots shooting power!!!
+GH,401,19,Blue 2,Right,FALSE,TRUE,2,0,0,17,0,FALSE,Traversal,FALSE,
+RO,9998,19,Blue 1,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,Can’t shoot
+TR,9998,1.5,Red 2,Left,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,You already know 
+Cm,3737,1.5,Red 3,Middle,FALSE,TRUE,1,0,0,8,0,FALSE,Traversal,FALSE,
+GH,2363,1.5,Blue 2,Right,FALSE,TRUE,2,0,0,7,0,FALSE,NA,FALSE,
+RO,2890,1.5,Blue 3,Middle,FALSE,TRUE,2,0,0,0,0,FALSE,NA,FALSE,Did not move from the blue side of the field 
+GC,900,1.5,Red 1,Right,FALSE,FALSE,0,0,0,0,0,FALSE,NA,TRUE,Did not move once this match
+ZO,422,1.5,Blue 1,Left,FALSE,TRUE,2,0,0,8,0,FALSE,Traversal,FALSE,
+Dcd :),1610,20,Red 1,Left,FALSE,TRUE,1,1,0,0,7,FALSE,Medium,FALSE,
+IB,8590,20,Red 2,Middle,FALSE,FALSE,0,0,0,0,0,FALSE,NA,TRUE,The robot did not move at all the entire match
+PC,422,20,Blue 3,Middle,FALSE,TRUE,2,2,0,10,0,FALSE,NA,FALSE,
+Cm,9991,20,Red 3,Right,FALSE,TRUE,2,0,0,0,0,TRUE,High,FALSE,
+PV,900,20,Blue 2,Left,FALSE,FALSE,0,0,0,3,0,FALSE,Traversal,FALSE,disabled for first half
+RO,977,20,Blue 1,Right,FALSE,TRUE,1,1,0,4,0,TRUE,High,FALSE,"Fast driving, got defended by 9991 a little, and messed up climb a bit"
+PC,9999,21,Blue 1,Right,FALSE,TRUE,0,0,1,0,3,FALSE,Failed,FALSE,
+PV,1599,21,Blue 3,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,
+Dcd :),1793,21,Red 1,Middle,FALSE,TRUE,2,0,0,0,0,FALSE,Medium,FALSE,Bad aim
+RO,3136,21,Blue 2,Left,FALSE,TRUE,2,0,0,7,0,FALSE,Failed,FALSE,"Late climb, accurate but slow shooter, one ball intake??"
+IB,2363,21,Red 2,Right,FALSE,TRUE,3,1,0,8,0,FALSE,Failed,FALSE,"Triple Helix missed an overwhelming majority of their shots, but still got a good amount in."
+Cm,339,21,Red 3,Left,FALSE,TRUE,1,0,0,0,0,FALSE,NA,FALSE,This team is awful please don't pick them. They scored nothing and screwed thier teams climbing
+Dcd :),4561,22,Red 1,Right,FALSE,FALSE,0,0,0,10,0,FALSE,NA,FALSE,Sick lookin bot ngl
+IB,346,22,Red 2,Left,FALSE,TRUE,1,1,0,4,0,FALSE,Traversal,FALSE,"Despite shooting excessively high, they made a little over half of their shots"
+PV,3737,22,Blue 3,Left,FALSE,TRUE,0,0,1,0,9,FALSE,Medium,FALSE,
+ZO,619,22,Blue 1,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,Medium,FALSE,
+Cm,9998,22,Red 3,Middle,FALSE,TRUE,0,0,0,0,0,FALSE,NA,FALSE,More harm than help
+RO,1908,22,Blue 2,Right,FALSE,TRUE,2,0,0,7,2,FALSE,Failed,FALSE,Late climb
+,,,Red 1,Left,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,
+Dcd :),5804,23,Red 1,Left,FALSE,TRUE,0,1,0,3,1,FALSE,Traversal,FALSE,
+,,,Red 1,Left,FALSE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,
+ZO,8590,23,Blue 2,Left,FALSE,FALSE,1,0,0,0,0,FALSE,NA,TRUE,
+IB,1086,23,Red 2,Right,FALSE,TRUE,2,0,0,13,0,FALSE,Medium,FALSE,A little top-heavy
+Cm,836,23,Red 1,Left,FALSE,TRUE,2,0,0,8,0,FALSE,Traversal,FALSE,
+PV,900,23,Blue 3,Left,FALSE,TRUE,0,0,0,6,0,FALSE,NA,FALSE,
+RO,2028,23,Blue 1,Middle,FALSE,TRUE,2,0,0,0,0,FALSE,Failed,TRUE,Got disabled and aim was really off; they did not move during climbing 
+Dcd :),977,24,Red 1,Right,FALSE,,0,0,0,7,1,FALSE,Traversal,FALSE,
+IB,2642,24,Red 2,Left,FALSE,TRUE,1,1,0,4,0,FALSE,High,FALSE,
+TR,3359,24,Red 3,Middle,FALSE,TRUE,0,1,0,2,0,FALSE,Medium,FALSE,Shooter consistently shorty
+ZO,422,24,Blue 2,Middle,FALSE,TRUE,0,3,0,10,0,FALSE,Medium,FALSE,
+PV,384,24,Blue 3,Left,FALSE,TRUE,2,0,0,8,0,FALSE,Low,FALSE,
+RO,122,24,Blue 1,Left,FALSE,TRUE,1,0,0,8,0,FALSE,Medium,FALSE,Pretty consistent and late climb
+IB,2890,25,Red 2,Middle,FALSE,TRUE,0,0,1,5,0,FALSE,Medium,FALSE,
+TR,1610,25,Red 3,Left,FALSE,TRUE,1,0,0,0,12,FALSE,NA,FALSE,
+Dcd,6194,25,Red 1,Right,FALSE,TRUE,2,0,0,1,0,FALSE,NA,FALSE,
+ZO,401,25,Blue 1,Right,FALSE,TRUE,3,0,1,25,0,FALSE,NA,FALSE,
+GH,435,25,Blue 2,Middle,FALSE,TRUE,0,0,1,0,2,FALSE,Medium,FALSE,
+RO,9991,25,Blue 3,Right,FALSE,TRUE,0,2,0,3,0,FALSE,Traversal,FALSE,Missed most shots and took a while to climb
+RH,8590,26,Red 3,Left,TRUE,FALSE,0,0,0,0,0,FALSE,NA,FALSE,
+RO,1599,26,Blue 3,Left,FALSE,TRUE,0,0,0,0,2,FALSE,NA,FALSE,Shooter is all out of wack
+GH,1793,26,Blue 2,Right,FALSE,TRUE,0,0,0,0,4,FALSE,Medium,FALSE,
+GC,619,26,Red 2,Left,FALSE,TRUE,1,1,0,5,0,FALSE,Traversal,FALSE,Decent but slow
+ZO,900,26,Blue 1,Middle,FALSE,TRUE,1,0,0,0,0,FALSE,Medium,FALSE,driving seemed uncontrolled
+EF,9998,26,Red 1,Right,FALSE,TRUE,0,0,0,0,0,TRUE,NA,FALSE,Lacking a climber arm as well as any utility during the match. It proceeded to spin very slowly but not much happened. 
+ZO,2642,27,Blue 1,Left,FALSE,TRUE,0,0,0,0,0,FALSE,Failed,FALSE,
+GC,5804,27,Red 2,Left,FALSE,TRUE,1,0,0,2,1,TRUE,Traversal,FALSE,Decent bot but slightly inaccurate 
+GH,3737,27,Blue 2,Middle,FALSE,TRUE,0,0,1,0,5,FALSE,Traversal,FALSE,
+RO,422,27,Blue 3,Left,FALSE,TRUE,1,1,0,13,0,FALSE,High,FALSE,Couldn’t do traversal for some reason
+RH,3136,27,Red 3,Left,FALSE,TRUE,1,1,0,6,0,FALSE,Medium,FALSE,Struggled to intake balls 
+EF,2028,27,Red 1,Middle,FALSE,TRUE,2,0,0,4,0,FALSE,Medium,FALSE,Intake struggled at times to grab balls. Shooting was accurate but time consuming. Climbed okay.

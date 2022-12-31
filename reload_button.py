@@ -12,6 +12,7 @@ gc = pygsheets.authorize(service_file=
 sh = gc.open('401_scouting_test_database')
 
 #select the first sheet 
+#could cause bugs if first sheet is not correct one
 wks = sh[0]
 
 app = Dash(__name__)
