@@ -1,3 +1,5 @@
 #.gitignore
 env
 __pycache__/
+tba_api_key.txt
+
