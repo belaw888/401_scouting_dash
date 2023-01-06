@@ -22,6 +22,7 @@ class tba_api_requests:
         
         json_data = self.tba.match(match_key)
         data = self.tbapy_to_dict(json_data)
+        # print(data)
         match_code = data['comp_level'] + str(data['match_number'])
         
         df = pd.DataFrame.from_dict(data['score_breakdown'])
