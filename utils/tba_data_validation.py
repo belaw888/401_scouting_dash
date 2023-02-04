@@ -29,11 +29,15 @@ class tba_data_validation:
             'tba_api_key.txt')
 
     def set_local_scouting_data(self, data) -> None:
-        self.local_scouting_data = data
+        tba_data_validation.local_scouting_data = data
+
+    def get_local_scouting_data(self):
+        return tba_data_validation.local_scouting_data
 
     def get_DataFrame_differences(self, df1, df2):
         try:
             data_combined = df1.merge(df2, indicator=True, how='outer')
+            print('here')
             data_combined_diff = data_combined.loc[lambda x: x['_merge'] != 'both']
             data_combined_diff.drop(columns=['_merge'], inplace=True)
             return data_combined_diff
@@ -42,7 +46,6 @@ class tba_data_validation:
             return 'error'  # will slow things down bc returns whole df if there are no updates on refresh
 
     def validate_new_data(self, updated_scouting_data):
-
         new_scouting_data = self.get_DataFrame_differences(
             self.local_scouting_data,
             updated_scouting_data)
@@ -51,7 +54,7 @@ class tba_data_validation:
 
         local = self.local_scouting_data
         validation_list = []
-
+        print(local['tba_api_id'])
         keys_set = set(local['tba_api_id'].to_list())
         unique_keys = list(keys_set)
 
@@ -118,6 +121,8 @@ class tba_data_validation:
 
 val = tba_data_validation()
 # will not validate qm27 because qm27 does not have all six data points unless df.loc[0:181]
-val.set_local_scouting_data(df.loc[0:180])
-print(df.loc[0:180])
-print(val.validate_new_data(df))
+# val.set_local_scouting_data(df)
+
+# print(df.loc[0:180])
+# print(val.validate_new_data(df))
+print(val.get_local_scouting_data())
