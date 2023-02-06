@@ -15,6 +15,12 @@ class tba_api_requests:
         
         return data
     
+    def tbapy_to_dataframe(self, json_data):
+        dict = self.tbapy_to_dict(json_data)
+        df = pd.DataFrame(dict)
+        
+        return df
+    
     def event_match_keys(self, event_key):
         return self.tba.event_matches(event_key, keys = True)
         
@@ -63,3 +69,12 @@ class tba_api_requests:
             df = pd.concat([df, self.match_aggregate_data(match)])
 
         return df
+    
+    def team_profile(self, number):
+        profile = self.tba.team(f"frc{str(number)}", simple=True)
+        profile = self.tbapy_to_dict(profile)
+        return profile
+        
+# api = tba_api_requests('tba_api_key.txt')
+# profile = api.team_profile(346)
+# print(profile['city'])
