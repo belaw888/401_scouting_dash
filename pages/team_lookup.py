@@ -4,7 +4,8 @@
 import pandas as pd
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
-from dash import Dash, dcc, html, dash_table, Input, Output  # pip install dash (version 2.0.0 or higher)
+import dash
+from dash import Dash, dcc, html, callback, dash_table, Input, Output  # pip install dash (version 2.0.0 or higher)
 from plotly.subplots import make_subplots
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import numpy
@@ -13,10 +14,10 @@ import utils.sheets_data_manager as manager
 import utils.tba_api_requests as tbapy
 import dash_bootstrap_components as dbc
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY],
-           meta_tags=[{'name': 'viewport',
-                       'content': 'width=device-width, initial-scale=1.0'}])
-server = app.server
+
+dash.register_page(__name__, 
+                   name='Team Lookup',
+                   title='Team Lookup')
 
 sheets = manager.sheets_data_manager()
 sheets_data = sheets.get_google_sheets_dataframe()
@@ -27,10 +28,10 @@ tba = tbapy.tba_api_requests('tba_api_key.txt')
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
 print(columns)
 
-app.layout = dbc.Container([
+layout = dbc.Container([
     dbc.Row([
         dbc.Col(html.H1("2023 Scouting Live Data (Test)",
-                         className='text-center text-white mb-4'),
+                         className='text-center text-white mb-4 mt-4'),
                          width=10),
         
         dbc.Col(update_button := dbc.Button(
@@ -58,7 +59,8 @@ app.layout = dbc.Container([
         dbc.Col(
             dcc.Graph(id='cones_graph', figure={})
         )
-    )
+    ),
+    
 ])
 
 #     html.Div([
@@ -80,7 +82,7 @@ app.layout = dbc.Container([
 # ])
 
 #callbacks
-@app.callback(
+@callback(
     [   
         Output(component_id='team_name_string', component_property='children'),
         Output(component_id='team_location', component_property='children'),
@@ -171,7 +173,7 @@ def update_profile(select_team):
     return [f'Team {select_team} - {nickname}', f'{city}, {state_prov}', cones_fig]
 
 
-@app.callback(
+@callback(
     Output(update_button, component_property='name'),
     Input(update_button, component_property='n_clicks')
 )
@@ -188,5 +190,4 @@ def update_data(n_clicks):
 
 
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+

@@ -50,10 +50,12 @@ class sheets_data_manager:
       list.sort()
       return list        
   
+    
+  
   
 f = sheets_data_manager()
 # print(f.get_google_sheets_dataframe())
-f.get_duplicates_dict()
+print(f.get_duplicates_dict())
 # print(f.get_team_data(881))
 # print(type(f.get_team_list()))
 # print(f.get_team_list())
