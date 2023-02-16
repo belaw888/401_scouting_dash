@@ -26,17 +26,17 @@ teams_list = sheets.get_team_list()
 tba = tbapy.tba_api_requests('tba_api_key.txt')
 
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
-print(columns)
+# print(columns)
 
 layout = dbc.Container([
-    dbc.Row([
-        dbc.Col(html.H1("2023 Scouting Live Data (Test)",
-                         className='text-center text-white mb-4 mt-4'),
-                         width=10),
+    # dbc.Row([
+    #     dbc.Col(html.H1("2023 Scouting Live Data (Test)",
+    #                      className='text-center text-white mb-4 mt-4'),
+    #                      width=10),
         
-        dbc.Col(update_button := dbc.Button(
-                "Update Data", class_name="mt-3", color='primary', n_clicks=0))
-    ]),
+        # dbc.Col(update_button := dbc.Button(
+        #         "Update Data", class_name="mt-3", color='primary', n_clicks=0))
+    # ]),
     dbc.Row([
         dbc.Col([
             select_team := dcc.Dropdown(
@@ -90,18 +90,22 @@ layout = dbc.Container([
     ],
     [
     	Input(select_team, component_property='value'),
+        Input('session_database', 'data')
     ]
 )
 
-def update_profile(select_team):
+def update_profile(select_team, session_database):
     profile_dict = tba.team_profile(select_team)
     nickname = profile_dict.get('nickname')
     # print(profile_dict)
     state_prov = profile_dict.get('state_prov')
     city = profile_dict.get('city')
-    team_scouting_results = sheets.get_team_data(select_team)
+    # team_scouting_results = sheets.get_team_data(select_team)
+    scouting_results = sheets.parse_json(session_database)
+    team_scouting_results = sheets.get_team_data_static(scouting_results, select_team)
     
     x = team_scouting_results['Match Number']
+    # print(x)
     # print(x)
     
     auto_cone_pick_trace = go.Bar(
@@ -173,20 +177,20 @@ def update_profile(select_team):
     return [f'Team {select_team} - {nickname}', f'{city}, {state_prov}', cones_fig]
 
 
-@callback(
-    Output(update_button, component_property='name'),
-    Input(update_button, component_property='n_clicks')
-)
+# @callback(
+#     Output(update_button, component_property='name'),
+#     Input(update_button, component_property='n_clicks')
+# )
  
-def update_data(n_clicks):
-    # print('yes')
-    sheets.refresh_google_sheets_dataframe()
+# def update_data(n_clicks):
+#     # print('yes')
+#     sheets.refresh_google_sheets_dataframe()
     # update_profile(select_team)
     
     
     # clicked_style = {'color' :'blue'}
     
-    return 'Update Data'
+    # return 'Update Data'
 
 
 

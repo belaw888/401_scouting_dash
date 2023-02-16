@@ -37,7 +37,7 @@ topbar = dbc.Nav(
     ],
     vertical=False,
     pills=True,
-    className="bg-dark",
+    className="bg-dark mb-3",
     justified=True
 )
 
@@ -47,13 +47,15 @@ app.layout = dbc.Container([
     
     dbc.Row([
         dbc.Col(html.Div("FRC Team 401 - Scouting Data",
-                         style={'fontSize': 50, 'textAlign': 'center'}))
+                         style={'fontSize': 50, 'textAlign': 'center'}),
+                width={'size': 10}),
+        
+        dbc.Col(update_button := dbc.Button(
+            "Update Data", class_name="mt-4", color='primary', n_clicks=0),
+                ),
     ]),
     
-    dbc.Col(update_button := dbc.Button(
-        "Update Data", class_name="mt-3", color='primary', n_clicks=0)),
-    
-    html.Div(id='test', children=[]),
+    # html.Div(id='test', children=[]),
     
     html.Hr(),
 
@@ -84,17 +86,15 @@ def update_session_data(n_clicks):
     
     return json_string
 
-@app.callback(
-    Output('test', 'children'),
-    Input('session_database', 'data')
-)
+# @app.callback(
+#     Output('test', 'children'),
+#     Input('session_database', 'data')
+# )
 
-def update(data):
-    dataframe = sheets.parse_json(data)
-    return dataframe.at[1,'Match Type']
+# def update(data):
+#     dataframe = sheets.parse_json(data)
+#     return dataframe.at[1,'Match Type']
 
-def test():
-    return 'test'
 
 if __name__ == '__main__':
 	app.run_server(debug=True)

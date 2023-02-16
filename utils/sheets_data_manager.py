@@ -58,16 +58,21 @@ class sheets_data_manager:
         dict = json.loads(json_string)
         df = pd.DataFrame(dict['data'], columns=dict['columns'], index=dict['index'])
         return df
+    
+    #static isn't really the right term here
+    def get_team_data_static(self, dataframe, team):
+        filter = dataframe['Team Number'] == team
+        return dataframe.loc[filter]
   
-f = sheets_data_manager()
-# print(f.get_google_sheets_dataframe())
-# print(f.get_duplicates_dict())
-# print(f.get_team_data(401))
-# print(f.get_team_data(881))
-# print(type(f.get_team_list()))
-# print(f.get_team_list())
-json_data = f.get_as_json()
-dict = json.loads(json_data)
-df = pd.DataFrame(dict['data'], columns=dict['columns'], index=dict['index'])
-print(df)
-print(f.get_google_sheets_dataframe() == df)
+# f = sheets_data_manager()
+# # print(f.get_google_sheets_dataframe())
+# # print(f.get_duplicates_dict())
+# # print(f.get_team_data(401))
+# # print(f.get_team_data(881))
+# # print(type(f.get_team_list()))
+# # print(f.get_team_list())
+# json_data = f.get_as_json()
+# dict = json.loads(json_data)
+# df = pd.DataFrame(dict['data'], columns=dict['columns'], index=dict['index'])
+# print(df)
+# print(f.get_google_sheets_dataframe() == df)
