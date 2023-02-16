@@ -11,3 +11,6 @@ layout = html.Div(children=[
     '''),
 
 ])
+
+def test():
+    return 'bruh'

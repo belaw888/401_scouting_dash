@@ -15,9 +15,13 @@ import utils.sheets_data_manager as manager
 import utils.tba_api_requests as tbapy
 import dash_bootstrap_components as dbc
 
+sheets = manager.sheets_data_manager()
+sheets_data = sheets.get_google_sheets_dataframe()
+
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY],
            meta_tags=[{'name': 'viewport',
                        'content': 'width=device-width, initial-scale=1.0'}])
+        #    suppress_callback_exceptions=True)
 server = app.server
 
 topbar = dbc.Nav(
@@ -38,11 +42,19 @@ topbar = dbc.Nav(
 )
 
 app.layout = dbc.Container([
+    
+    dcc.Store(id='session_database', storage_type='session'),
+    
     dbc.Row([
         dbc.Col(html.Div("FRC Team 401 - Scouting Data",
                          style={'fontSize': 50, 'textAlign': 'center'}))
     ]),
-
+    
+    dbc.Col(update_button := dbc.Button(
+        "Update Data", class_name="mt-3", color='primary', n_clicks=0)),
+    
+    html.Div(id='test', children=[]),
+    
     html.Hr(),
 
     dbc.Row(
@@ -59,6 +71,30 @@ app.layout = dbc.Container([
 		]
     )
 	], fluid=True)
+
+
+@app.callback(
+    Output('session_database', 'data'),
+    Input(update_button, 'n_clicks')
+)
+
+def update_session_data(n_clicks):
+    sheets.refresh_google_sheets_dataframe()
+    json_string = sheets.get_as_json()
+    
+    return json_string
+
+@app.callback(
+    Output('test', 'children'),
+    Input('session_database', 'data')
+)
+
+def update(data):
+    dataframe = sheets.parse_json(data)
+    return dataframe.at[1,'Match Type']
+
+def test():
+    return 'test'
 
 if __name__ == '__main__':
 	app.run_server(debug=True)
