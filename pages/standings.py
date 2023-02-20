@@ -13,7 +13,10 @@ columns_list = ['Auto Cones Picked Up',
                 'Auto Cubes Picked Up',
                 'Auto Cones Scored',
                 'Auto Cubes Scored',
-                'Cones Picked Up']
+                'Cones Picked Up',
+                'Cones Scored',
+                'Cubes Picked Up',
+                'Cubes Scored']
 
 sheets = manager.sheets_data_manager()
 
@@ -21,57 +24,62 @@ sheets = manager.sheets_data_manager()
 dash.register_page(__name__, path='/')
 
 
-def discrete_background_color_bins(df, n_bins=5, columns='all', colorscale_name='Oranges'):
-    bounds = [i * (1.0 / n_bins) for i in range(n_bins + 1)]
-    if columns == 'all':
-        if 'id' in df:
-            df_numeric_columns = df.select_dtypes(
-                'number').drop(['id'], axis=1)
-        else:
-            df_numeric_columns = df.select_dtypes('number')
-    else:
-        df_numeric_columns = df[columns]
-    df_max = df_numeric_columns.max().max()
-    df_min = df_numeric_columns.min().min()
-    ranges = [
-        ((df_max - df_min) * i) + df_min
-        for i in bounds
-    ]
+def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_names=['Oranges', 'Blues']):
+    
+    # print(columns_array)
     styles = []
-    legend = []
-    for i in range(1, len(bounds)):
-        min_bound = ranges[i - 1]
-        max_bound = ranges[i]
-        backgroundColor = colorlover.scales[str(n_bins)]['seq'][colorscale_name][i - 1]
-        color = 'black' #if i > len(bounds) / 2. else 'inherit'
+    multiple_legends = []    
+    for count, column_sets in enumerate(columns_array, start=0):
+        print(column_sets)
+        print('done')
+        bounds = [i * (1.0 / n_bins) for i in range(n_bins + 1)]
+        
+        df_numeric_columns = df[column_sets]
+        df_max = df_numeric_columns.max().max()
+        df_min = df_numeric_columns.min().min()
+        ranges = [
+            ((df_max - df_min) * i) + df_min
+            for i in bounds
+        ]
+        # styles = []
+        legend = []
+        for i in range(1, len(bounds)):
+            min_bound = ranges[i - 1]
+            max_bound = ranges[i]
+            backgroundColor = colorlover.scales[str(n_bins)]['seq'][colorscale_names[count]][i - 1]
+            color = 'black' #if i > len(bounds) / 2. else 'inherit'
 
-        for column in df_numeric_columns:
-            styles.append({
-                'if': {
-                    'filter_query': (
-                        '{{{column}}} >= {min_bound}' +
-                        (' && {{{column}}} < {max_bound}' if (
-                            i < len(bounds) - 1) else '')
-                    ).format(column=column, min_bound=min_bound, max_bound=max_bound),
-                    'column_id': column
-                },
-                'backgroundColor': backgroundColor,
-                'color': color
-            })
-        legend.append(
-            html.Div(style={'display': 'inline-block', 'width': '60px'}, children=[
-                html.Div(
-                    style={
-                        'backgroundColor': backgroundColor,
-                        'borderLeft': '1px rgb(50, 50, 50) solid',
-                        'height': '10px'
-                    }
-                ),
-                html.Small(round(min_bound, 2), style={'paddingLeft': '2px'})
-            ])
-        )
+            for column in df_numeric_columns:
+                styles.append({
+                    'if': {
+                        'filter_query': (
+                            '{{{column}}} >= {min_bound}' +
+                            (' && {{{column}}} < {max_bound}' if (
+                                i < len(bounds) - 1) else '')
+                        ).format(column=column, min_bound=min_bound, max_bound=max_bound),
+                        'column_id': column
+                    },
+                    'backgroundColor': backgroundColor,
+                    'color': color
+                })
+            legend.append(
+                html.Div(style={'display': 'inline-block', 'width': '60px'}, children=[
+                    html.Div(
+                        style={
+                            'backgroundColor': backgroundColor,
+                            'borderLeft': '1px rgb(50, 50, 50) solid',
+                            'height': '10px'
+                        }
+                    ),
+                    html.Small(round(min_bound, 2), style={'paddingLeft': '2px'})
+                ])
+            )
+        # styles.append(styles)
+        multiple_legends.append(legend)
+# html.Div(legends, style={'padding': '5px 0 5px 0'})
+    print (styles)
 
-    return (styles, html.Div(legend, style={'padding': '5px 0 5px 0'}))
+    return (styles, multiple_legends)
 
 layout = dbc.Container([
     dbc.Row([legend1 := html.Div(style={'float': 'right'}),
@@ -154,15 +162,14 @@ def show_data_table(session_database):
     # columns = [{"name": i, "id": i} for i in scouting_results.columns]
     data = new_df.to_dict('records')
     columns = [{"name": i, "id": i} for i in new_df.columns]
-    (styles1, legend1) = discrete_background_color_bins(new_df, 
-                                                      columns=columns_list[:3],
-                                                      colorscale_name='Oranges')
+    (styles, legends) = discrete_background_color_bins(new_df, 
+                                                      columns_array=[columns_list[:4],columns_list[4:]],
+                                                      colorscale_names=['Oranges', 'Blues'])
     
-    (styles2, legend2) = discrete_background_color_bins(new_df,
-                                                        columns=columns_list[3:],
-                                                        colorscale_name='Blues')
-
-    return data, columns, [styles1, styles2], legend1, legend2
+    legend1 = legends[0]
+    legend2 = legends[1]
+    
+    return data, columns, styles, legend1, legend2
 
 # def show_div(data):
 #     dict = json.loads(data)
