@@ -8,15 +8,37 @@ import utils.sheets_data_manager as manager
 # from dash._get_app import test
 # df = pd.read_csv('https://git.io/Juf1t') Format, Group
 import colorlover
+from enum import IntEnum
 
-columns_list = ['Auto Cones Picked Up',
-                'Auto Cubes Picked Up',
-                'Auto Cones Scored',
-                'Auto Cubes Scored',
-                'Cones Picked Up',
-                'Cones Scored',
-                'Cubes Picked Up',
-                'Cubes Scored']
+class Points(IntEnum):
+    AUTO_TOP = 6
+    AUTO_MID = 4
+    AUTO_LOW = 3
+    TELE_TOP = 5
+    TELE_MID = 3
+    TELE_LOW = 2
+    LINK = 5
+    AUTO_DOCKED = 8
+    AUTO_ENGAGED = 12
+    TELE_DOCKED = 6
+    TELE_ENGAGED = 10
+    
+
+
+columns_list = ['Auto Grid Points',
+                'Auto Charge Points']
+                # 'Auto Cones Mid',
+                # 'Auto Cones Low',
+                # 'Auto Cubes Top',
+                # 'Auto Cubes Mid',
+                # 'Auto Cubes Low',
+                # 'Tele Cones Top',
+                # 'Tele Cones Mid',
+                # 'Tele Cones Low',
+                # 'Tele Cubes Top',
+                # 'Tele Cubes Mid',
+                # 'Tele Cubes Low'
+                # ]
 
 sheets = manager.sheets_data_manager()
 
@@ -77,7 +99,7 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
         # styles.append(styles)
         multiple_legends.append(legend)
 # html.Div(legends, style={'padding': '5px 0 5px 0'})
-    print (styles)
+    # print (styles)
 
     return (styles, multiple_legends)
 
@@ -139,7 +161,15 @@ def show_data_table(session_database):
         aggregate_list = []
         
         for cols in columns_list:
-            aggregate_list.append(team_df[cols].mean())
+            if cols == 'Auto Grid Points':
+                aggregate_list.append((
+                    ((team_df['Auto Cones Top'].mean() + team_df['Auto Cubes Top'].mean()) * Points.AUTO_TOP)
+                + ((team_df['Auto Cones Mid'].mean() + team_df['Auto Cubes Mid'].mean()) * Points.AUTO_MID)
+                + ((team_df['Auto Cones Low'].mean() + team_df['Auto Cubes Low'].mean()) * Points.AUTO_LOW)
+                    ))
+            elif cols == 'Auto Charge Points':
+                mapped_series = team_df['End Auto Position'].map({'D': Points.AUTO_DOCKED, 'E' : Points.AUTO_ENGAGED, 'N' : 0})
+                aggregate_list.append(mapped_series.mean())
         # avg_auto_cones_picked = team_df['Auto Cones Picked Up'].mean()
         # avg_auto_cubes_picked = team_df['Auto Cubes Picked Up'].mean()
         # avg_auto_cones_scored = team_df['Auto Cones Scored'].mean()
@@ -163,7 +193,7 @@ def show_data_table(session_database):
     data = new_df.to_dict('records')
     columns = [{"name": i, "id": i} for i in new_df.columns]
     (styles, legends) = discrete_background_color_bins(new_df, 
-                                                      columns_array=[columns_list[:4],columns_list[4:]],
+                                                      columns_array=[columns_list[:1],columns_list[1:]],
                                                       colorscale_names=['Oranges', 'Blues'])
     
     legend1 = legends[0]
