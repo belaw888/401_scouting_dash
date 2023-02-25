@@ -26,7 +26,9 @@ class Points(IntEnum):
 
 
 columns_list = ['Auto Grid Points',
-                'Auto Charge Points']
+                'Auto Charge Points',
+                'Tele Grid Points',
+                'Endgame Charge Points']
                 # 'Auto Cones Mid',
                 # 'Auto Cones Low',
                 # 'Auto Cubes Top',
@@ -105,7 +107,8 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
 
 layout = dbc.Container([
     dbc.Row([legend1 := html.Div(style={'float': 'right'}),
-            legend2 := html.Div(style={'float': 'right'})]),
+            legend2 := html.Div(style={'float': 'right'}),
+            legend3 := html.Div(style={'float': 'right'})]),
     dbc.Row([
         table := dash_table.DataTable(sort_action='native',
                              style_data={
@@ -133,6 +136,8 @@ layout = dbc.Container([
         )
     ]),
     
+    html.Br()
+    
     # df.to_dict('records'), [
     #     {"name": i, "id": i} for i in df.columns], id='tbl',
     
@@ -142,7 +147,7 @@ layout = dbc.Container([
 @callback(
     [Output(table, 'data'), Output(table, 'columns'),
      Output(table, 'style_data_conditional'), Output(legend1, 'children'),
-     Output(legend2, 'children')],
+     Output(legend2, 'children'), Output(legend3, 'children')],
     Input('session_database', 'data')
 )
 
@@ -170,6 +175,15 @@ def show_data_table(session_database):
             elif cols == 'Auto Charge Points':
                 mapped_series = team_df['End Auto Position'].map({'D': Points.AUTO_DOCKED, 'E' : Points.AUTO_ENGAGED, 'N' : 0})
                 aggregate_list.append(mapped_series.mean())
+            elif cols == 'Tele Grid Points':
+                aggregate_list.append((
+                    ((team_df['Tele Cones Top'].mean() + team_df['Tele Cubes Top'].mean()) * Points.TELE_TOP)
+                  + ((team_df['Tele Cones Mid'].mean() + team_df['Tele Cubes Mid'].mean()) * Points.TELE_MID)
+                  + ((team_df['Tele Cones Low'].mean() + team_df['Tele Cubes Low'].mean()) * Points.TELE_LOW)
+                ))
+            elif cols == 'Endgame Charge Points':
+                mapped_series = team_df['End Auto Position'].map({'D': Points.TELE_DOCKED, 'E': Points.TELE_ENGAGED, 'N': 0})
+                aggregate_list.append(mapped_series.mean())
         # avg_auto_cones_picked = team_df['Auto Cones Picked Up'].mean()
         # avg_auto_cubes_picked = team_df['Auto Cubes Picked Up'].mean()
         # avg_auto_cones_scored = team_df['Auto Cones Scored'].mean()
@@ -193,13 +207,16 @@ def show_data_table(session_database):
     data = new_df.to_dict('records')
     columns = [{"name": i, "id": i} for i in new_df.columns]
     (styles, legends) = discrete_background_color_bins(new_df, 
-                                                      columns_array=[columns_list[:1],columns_list[1:]],
-                                                      colorscale_names=['Oranges', 'Blues'])
+                                                      columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]]],
+                                                      colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges'])
     
     legend1 = legends[0]
     legend2 = legends[1]
+    legend3 = legends[2]
     
-    return data, columns, styles, legend1, legend2
+    # print(styles[0])
+    
+    return data, columns, styles, legend1, legend2, legend3
 
 # def show_div(data):
 #     dict = json.loads(data)
