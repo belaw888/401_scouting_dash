@@ -28,6 +28,8 @@ teams_list = sheets.get_team_list()
 tba = tbapy.tba_api_requests('tba_api_key.txt')
 
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
+config = {'displayModeBar': False}
+
 # print(columns)
 
 layout = dbc.Container([
@@ -37,26 +39,28 @@ layout = dbc.Container([
                              options=teams_list,
                              value="401",
                              multi=False,
-                             className='mb-4 text-primary'
+                             className='mb-4 text-primary d-flex justify-content-around"'
                              )
-                ], width={'size': 3}),
+                ], xs=12, sm=12, md=3, lg=3, xl=3),#width={'size': 3}),
         
         dbc.Col([
             team_name_string := html.H4( children=[],
-                    className='text-center'
+                                         className='d-flex justify-content-md-center justify-content-sm-start'
                     )
-                ], width={'size': 6}),
+                ], xs=12, sm=12, md=6, lg=6, xl=6),  # width={'size': 6}),
         
         dbc.Col([
             team_location := html.H4(children=[],
-                    className='text-center'
+                                     className='d-flex justify-content-md-end justify-content-sm-start'
                     )
-                ], width={'size': 3})
-    ]),
+                ], xs=12, sm=12, md=3, lg=3, xl=3),  # width={'size': 3})
+    ], className="d-flex justify-content-around"),
+    
+    html.Br(),
     
     dbc.Row(
         dbc.Col(
-            auto_grid_graph := dcc.Graph(figure={})
+            auto_grid_graph := dcc.Graph(figure={}, config=config)
         )
     ),
     
@@ -137,18 +141,27 @@ def update_profile(select_team, session_database):
                       backoff=100),
             hovertemplate="Avg Game Pieces: %{y}" +
             "<extra></extra>",
+            legendrank=4
         )
 
     auto_grid_data = [auto_low_trace, auto_mid_trace, auto_top_trace, auto_mean_trace]
 
     auto_grid_layout = go.Layout(
         barmode='stack', 
-        title_text='<b>Game Pieces Scored - Auto</b>',
+        # title={
+        # 'text': '<b>Game Pieces Scored - Auto</b>',
+        # 'y': 0.95,
+        # 'x': 0.5,
+        # 'xanchor': 'center',
+        # 'yanchor': 'top'}
         )
-    
+        
     auto_grid_fig = go.Figure(
         data=auto_grid_data,
         layout=auto_grid_layout)
+    
+    auto_grid_fig.update_yaxes(automargin='top')
+
     
     auto_grid_fig.update_yaxes(
         range=[0, 20],
@@ -157,6 +170,24 @@ def update_profile(select_team, session_database):
     auto_grid_fig.update_xaxes(
         type='category',
         title_text="<b>Match Number</b>")
+    
+    auto_grid_fig.update_layout(
+        margin=dict(
+            l=75,
+            r=55,
+            b=75,
+            t=50,
+            pad=2),
+        
+        legend=dict(
+        # entrywidthmode='fraction',
+        entrywidth=150,
+        orientation='h',
+        yanchor="bottom",
+        y=1.05,
+        xanchor="right",
+        x=1
+    ))
      
     return [f'Team {select_team} - {nickname}', f'{city}, {state_prov}', auto_grid_fig]
 

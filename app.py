@@ -20,7 +20,7 @@ sheets_data = sheets.get_google_sheets_dataframe()
 
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY],
            meta_tags=[{'name': 'viewport',
-                       'content': 'width=device-width, initial-scale=1.0'}])
+                       'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale-1.0'}])
         #    suppress_callback_exceptions=True)
 server = app.server
 
@@ -37,7 +37,7 @@ topbar = dbc.Nav(
     ],
     vertical=False,
     pills=True,
-    className="bg-dark mb-3",
+    className="bg-dark mb-5",
     justified=True
 )
 
@@ -46,14 +46,16 @@ app.layout = dbc.Container([
     dcc.Store(id='session_database', storage_type='session'),
     
     dbc.Row([
-        dbc.Col(html.Div("FRC Team 401 - Scouting Data",
-                         style={'fontSize': 50, 'textAlign': 'center'}),
-                width={'size': 10}),
+        # dbc.Col(html.Div(html.Img(src=dash.get_asset_url('assets/index.jpeg'))),
+                # xs=12, sm=12, md=3, lg=3, xl=3),
+        dbc.Col(html.H1("FRC Team 401 Scouting Data"),
+                xs=12, sm=12, md=9, lg=9, xl=9, className='d-flex justify-content-around'),
         
         dbc.Col(update_button := dbc.Button(
-            "Update Data", class_name="mt-4", color='primary', n_clicks=0),
+            "Update Data", class_name="", color='success', n_clicks=0),
+                xs=2, sm=2, md=3, lg=3, xl=3, className='d-flex justify-content-around'
                 ),
-    ]),
+    ], className='mx-5 my-3'),
     
     # html.Div(id='test', children=[]),
     
