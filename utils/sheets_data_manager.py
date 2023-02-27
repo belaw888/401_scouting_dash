@@ -9,8 +9,9 @@ class sheets_data_manager:
         self.credentials = pygsheets.authorize(
             service_file=#'/etc/secrets/team-401-scouting-credentials-2023.json')
        '/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
-        self.google_sheet = self.credentials.open('401_scouting_test_database')
-        self.worksheet = self.google_sheet[1]
+        self.google_sheet = self.credentials.open(
+            '[401 & 422 Scouting] - VABLA - 2023 Charged Up Database')
+        self.worksheet = self.google_sheet.worksheet('title', '2023_demo_data')
         self.dataframe = self.worksheet.get_as_df(
             has_header=True,
             index_column=1,
