@@ -18,9 +18,9 @@ import dash_bootstrap_components as dbc
 sheets = manager.sheets_data_manager()
 sheets_data = sheets.get_google_sheets_dataframe()
 
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY],
+app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, dbc.icons.FONT_AWESOME],
            meta_tags=[{'name': 'viewport',
-                       'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale-1.0'}])
+                       'content': 'width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8'}])
         #    suppress_callback_exceptions=True)
 server = app.server
 
@@ -48,14 +48,17 @@ app.layout = dbc.Container([
     dbc.Row([
         # dbc.Col(html.Div(html.Img(src=dash.get_asset_url('assets/index.jpeg'))),
                 # xs=12, sm=12, md=3, lg=3, xl=3),
-        dbc.Col(html.H1("FRC Team 401 Scouting Data"),
-                xs=12, sm=12, md=9, lg=9, xl=9, className='d-flex justify-content-around'),
+        dbc.Col(html.Img(src='assets/401_logo.png', style={'max-width': '100%', 'max-height': '100%', 'object-fit': 'contain'}, className='d-flex justify-content-left px-0'), 
+                xs=2, sm=3, md=2, lg=3, xl=3, className='d-flex justify-content-left px-0'),
+        
+        dbc.Col(html.H1("Scouting Data: CHS Blacksburg Event", className='mt-1',
+                        style={'display': 'table-cell', 'text-align': 'center','align-items': 'center', 'font-family': 'DejaVu Sans', 'font-weight': 'bold', 'font-size': '4.3vw'}),
+                xs=8, sm=6, md=8, lg=6, xl=6, className='d-flex justify-content-center align-item-center'),
         
         dbc.Col(update_button := dbc.Button(
-            "Update Data", class_name="", color='success', n_clicks=0),
-                xs=2, sm=2, md=3, lg=3, xl=3, className='d-flex justify-content-around'
-                ),
-    ], className='mx-5 my-3'),
+            html.I(className="fa-solid fa-rotate", style={'max-width': '100%', 'max-height': '100%', 'min-width': '100%', 'object-fit': 'contain', 'font-size': '2em'}), style={'max-width': '100%', 'max-height': '100%', 'object-fit': 'contain', 'min-width': '100%'}, color='success', n_clicks=0),
+                xs=2, sm=3, md=2, lg=3, xl=3, className='d-flex justify-content-right px-0'),
+    ], className='pb-1 pt-4 px-4'),
     
     # html.Div(id='test', children=[]),
     
@@ -74,7 +77,7 @@ app.layout = dbc.Container([
         ])
 		]
     )
-	], fluid=True)
+	], fluid=True, className='mx-0')
 
 
 @app.callback(

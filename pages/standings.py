@@ -106,9 +106,7 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
     return (styles, multiple_legends)
 
 layout = dbc.Container([
-    dbc.Row([legend1 := html.Div(style={'float': 'right'}),
-            legend2 := html.Div(style={'float': 'right'}),
-            legend3 := html.Div(style={'float': 'right'})]),
+    
     dbc.Row([
         table := dash_table.DataTable(sort_action='native',
                              style_data={
@@ -146,8 +144,7 @@ layout = dbc.Container([
 
 @callback(
     [Output(table, 'data'), Output(table, 'columns'),
-     Output(table, 'style_data_conditional'), Output(legend1, 'children'),
-     Output(legend2, 'children'), Output(legend3, 'children')],
+     Output(table, 'style_data_conditional')],
     Input('session_database', 'data')
 )
 
@@ -173,7 +170,7 @@ def show_data_table(session_database):
                 + ((team_df['Auto Cones Low'].mean() + team_df['Auto Cubes Low'].mean()) * Points.AUTO_LOW)
                     ))
             elif cols == 'Auto Charge Points':
-                mapped_series = team_df['End Auto Position'].map({'D': Points.AUTO_DOCKED, 'E' : Points.AUTO_ENGAGED, 'N' : 0})
+                mapped_series = team_df['End Auto Position'].map({'docked': Points.AUTO_DOCKED, 'engaged' : Points.AUTO_ENGAGED, 'NA' : 0, 'Failed' : 0})
                 aggregate_list.append(mapped_series.mean())
             elif cols == 'Tele Grid Points':
                 aggregate_list.append((
@@ -182,7 +179,7 @@ def show_data_table(session_database):
                   + ((team_df['Tele Cones Low'].mean() + team_df['Tele Cubes Low'].mean()) * Points.TELE_LOW)
                 ))
             elif cols == 'Endgame Charge Points':
-                mapped_series = team_df['End Auto Position'].map({'D': Points.TELE_DOCKED, 'E': Points.TELE_ENGAGED, 'N': 0})
+                mapped_series = team_df['End Auto Position'].map({'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': 0, 'Failed' : 0})
                 aggregate_list.append(mapped_series.mean())
         # avg_auto_cones_picked = team_df['Auto Cones Picked Up'].mean()
         # avg_auto_cubes_picked = team_df['Auto Cubes Picked Up'].mean()
@@ -216,7 +213,7 @@ def show_data_table(session_database):
     
     # print(styles[0])
     
-    return data, columns, styles, legend1, legend2, legend3
+    return data, columns, styles
 
 # def show_div(data):
 #     dict = json.loads(data)
