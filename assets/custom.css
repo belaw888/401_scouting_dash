@@ -9,8 +9,8 @@ body {
 	/* font-size: 2.5rem; */
 }
 
-span.column-header--sort {
-	display: none;
+.Dropdown .Table{
+	font-family: "OpenSans-Bold";
 }
 
 /* h4 {

@@ -122,10 +122,11 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
 #     return styles
 
 layout = dbc.Container([
-    dcc.Store(id='current_sort_by', storage_type='session'),
     dbc.Row(
         sort_by := dcc.Dropdown(options=columns_list,
                          value=columns_list[0],
+                         persistence=True,
+                         id='sort_by',
                          multi=False,
                          searchable=False,
                          className='mb-4 text-primary d-flex justify-content-around"')),
@@ -162,24 +163,16 @@ layout = dbc.Container([
     
 
 ])
-@callback(
-    Output('current_sort_by', 'data'),
-    Input(sort_by, 'value')
-)
-
-def set_dropdown_session_value(sort_by):
-    return sort_by
 
 @callback(
     [Output(table, 'data'), Output(table, 'columns'),
      Output(table, 'style_data_conditional')],
     
     [Input('session_database', 'data'),
-     Input(sort_by, 'value'),
-     Input('current_sort_by', 'data')]
+     Input(sort_by, 'value')]
 )
 
-def show_data_table(session_database, sort_by, session_sort_by):
+def show_data_table(session_database, sort_by):
     
     scouting_results = sheets.parse_json(session_database)
     
@@ -228,12 +221,8 @@ def show_data_table(session_database, sort_by, session_sort_by):
     
     new_df.reset_index(inplace=True, names='Team #')
     new_df = new_df.round(decimals=2)
-    try:
-        new_df.sort_values(by=session_sort_by, inplace=True, ascending=False)
-        print(session_sort_by)
-    except:
-        new_df.sort_values(by=sort_by, inplace=True, ascending=False)
-        print('no')
+    new_df.sort_values(by=sort_by, inplace=True, ascending=False)
+    # print(session_sort_by)
 
     # print(new_df)
     

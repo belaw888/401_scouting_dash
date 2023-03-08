@@ -37,7 +37,9 @@ layout = dbc.Container([
         dbc.Col([
             select_team := dcc.Dropdown(
                              options=teams_list,
-                             value="401",
+                             value=401,
+                             id='select_team',
+                             persistence=True,
                              multi=False,
                              searchable=False,
                              className='mb-4 text-primary d-flex justify-content-around'

@@ -33,7 +33,7 @@ layout = dbc.Container([
                                       'minWidth': '100%'
                                   },
                                   style_cell={'fontSize': 18,
-                                              'font-family': 'DejaVu Sans Mono',
+                                              'font-family': 'DejaVu Sans',
                                               'font-weight': 700})
             ])
     ])
