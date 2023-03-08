@@ -7,16 +7,18 @@ class sheets_data_manager:
     
     def __init__(self) -> None:
         self.credentials = pygsheets.authorize(
-            service_file='/etc/secrets/team-401-scouting-credentials-2023.json')
-        # service_file = '/home/belawilliams/Documents/team-401-scouting-credentials-2023.json'
-        self.google_sheet = self.credentials.open('401_scouting_test_database')
-        self.worksheet = self.google_sheet[1]
+            service_file=#'/etc/secrets/team-401-scouting-credentials-2023.json')
+       '/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
+        self.google_sheet = self.credentials.open(
+            '[401 & 422 Scouting] - VABLA - 2023 Charged Up Database')
+        self.worksheet = self.google_sheet.worksheet('title', '401_raw_data')
         self.dataframe = self.worksheet.get_as_df(
             has_header=True,
             index_column=1,
            	include_tailing_empty=False,
            	include_tailing_empty_rows=False,
-           	value_render='FORMATTED_VALUE')
+           	# value_render='UNFORMATTED_VALUE',
+            numerize=True)
         
     def refresh_google_sheets_dataframe(self):
         # print('flag')
@@ -25,20 +27,31 @@ class sheets_data_manager:
             # index_column=5,
          	include_tailing_empty=False,
          	include_tailing_empty_rows=False,
-         	value_render='FORMATTED_VALUE')
+         	# value_render='FORMATTED_VALUE'
+            numerize=True)
         # return self.dataframe
     
     def get_google_sheets_dataframe(self):
         return self.dataframe
     
-    def get_duplicates_dict(self):
+    def get_duplicates_series(self):
         data_id_value_counts = self.dataframe.index.value_counts()
         duplicates_series = data_id_value_counts[data_id_value_counts > 1]
+        ls = duplicates_series.index.tolist()
+        teams = [i.split('_')[0] for i in ls]
+        matches = [i.split('_')[1] for i in ls]
+        duplicates = duplicates_series.values.tolist()
+        
+        dict = {'Team Number': teams, 'Match Number': matches, '# of Duplicates': duplicates}
+        
+        # print(teams, matches, duplicates)
+        df = pd.DataFrame(dict)
+        print(df)
         # duplicates_list = duplicates_series.index.tolist()
         # print(duplicates_list)
-        duplicates_dict = duplicates_series.to_dict()
+        # duplicates_dict = duplicates_series
         # print(duplicates_dict)
-        return duplicates_dict
+        return df
         # for key in duplicates_dict:
         #     print(f'Warning! there are duplicate data points for {key}')
         
