@@ -40,7 +40,7 @@ layout = dbc.Container([
                              value="401",
                              multi=False,
                              searchable=False,
-                             className='mb-4 text-primary d-flex justify-content-around"'
+                             className='mb-4 text-primary d-flex justify-content-around'
                              )
                 ], xs=12, sm=12, md=3, lg=3, xl=3),#width={'size': 3}),
         
@@ -55,7 +55,7 @@ layout = dbc.Container([
                                      className='d-flex justify-content-md-end justify-content-sm-start'
                     )
                 ], xs=12, sm=12, md=3, lg=3, xl=3),  # width={'size': 3})
-    ], className="d-flex justify-content-around"),
+    ], className="d-flex justify-content-between"),
     
     html.Br(),
     
@@ -366,7 +366,7 @@ def update_profile(select_team, session_database):
     ))
 
      
-    return [f'Team {select_team} - {nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig]
+    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig]
 
 
 

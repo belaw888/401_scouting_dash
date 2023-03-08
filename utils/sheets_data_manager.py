@@ -46,7 +46,7 @@ class sheets_data_manager:
         
         # print(teams, matches, duplicates)
         df = pd.DataFrame(dict)
-        print(df)
+        # print(df)
         # duplicates_list = duplicates_series.index.tolist()
         # print(duplicates_list)
         # duplicates_dict = duplicates_series

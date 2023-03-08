@@ -54,8 +54,8 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
     styles = []
     multiple_legends = []    
     for count, column_sets in enumerate(columns_array, start=0):
-        print(column_sets)
-        print('done')
+        # print(column_sets)
+        # print('done')
         bounds = [i * (1.0 / n_bins) for i in range(n_bins + 1)]
         
         df_numeric_columns = df[column_sets]
@@ -105,10 +105,33 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
 
     return (styles, multiple_legends)
 
+
+# def highlight_sorted_by_column(column_list):
+#     styles = []
+#     for i in column_list:
+#             styles.append({
+#                 'if': {
+#                     'filter_query': '{{Auto Charge Points}} = {}'.format(i),
+#                     'column_id': 'Auto Charge Points'
+#                 },
+#                 'backgroundColor': '#39CCCC',
+#                 'color': 'blue'
+#             })
+#     print(styles)
+#     # print(id='current_sort_by')
+#     return styles
+
 layout = dbc.Container([
+    dcc.Store(id='current_sort_by', storage_type='session'),
+    dbc.Row(
+        sort_by := dcc.Dropdown(options=columns_list,
+                         value=columns_list[0],
+                         multi=False,
+                         searchable=False,
+                         className='mb-4 text-primary d-flex justify-content-around"')),
     
     dbc.Row([
-        table := dash_table.DataTable(sort_action='native',
+        table := dash_table.DataTable(
                              style_data={
                                  'color': 'black',
                                  'backgroundColor': 'white'
@@ -122,15 +145,13 @@ layout = dbc.Container([
                                 'minWidth': '100%'
                             },
                             style_cell={'fontSize': 18, 
-                                        'font-family': 'DejaVu Sans Mono', 
+                                        'font-family': 'DejaVu Sans', 
                                         'font-weight': 700},
                             fixed_columns={'headers': True, 'data': 1},
-                            style_cell_conditional=[
-                                 {
-                                     'if': {'column_id': 'Team #'},
-                                     'width': '85px'
-                                 },
-                            ],
+                            
+                            
+                                # highlight_sorted_by_column(columns_list),
+
         )
     ]),
     
@@ -141,14 +162,24 @@ layout = dbc.Container([
     
 
 ])
+@callback(
+    Output('current_sort_by', 'data'),
+    Input(sort_by, 'value')
+)
+
+def set_dropdown_session_value(sort_by):
+    return sort_by
 
 @callback(
     [Output(table, 'data'), Output(table, 'columns'),
      Output(table, 'style_data_conditional')],
-    Input('session_database', 'data')
+    
+    [Input('session_database', 'data'),
+     Input(sort_by, 'value'),
+     Input('current_sort_by', 'data')]
 )
 
-def show_data_table(session_database):
+def show_data_table(session_database, sort_by, session_sort_by):
     
     scouting_results = sheets.parse_json(session_database)
     
@@ -196,8 +227,15 @@ def show_data_table(session_database):
         new_df = pd.concat([new_df, auto_avgs])
     
     new_df.reset_index(inplace=True, names='Team #')
-    new_df = new_df.round(decimals=3)
-    print(new_df)
+    new_df = new_df.round(decimals=2)
+    try:
+        new_df.sort_values(by=session_sort_by, inplace=True, ascending=False)
+        print(session_sort_by)
+    except:
+        new_df.sort_values(by=sort_by, inplace=True, ascending=False)
+        print('no')
+
+    # print(new_df)
     
     # data = scouting_results.to_dict('records')
     # columns = [{"name": i, "id": i} for i in scouting_results.columns]
@@ -206,6 +244,21 @@ def show_data_table(session_database):
     (styles, legends) = discrete_background_color_bins(new_df, 
                                                       columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]]],
                                                       colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges'])
+    
+    team_num_width = {
+            'if': {'column_id': 'Team #'},
+            'width': '85px',
+        }
+    sorted_cell_border = {
+            'if': {'column_id': sort_by},
+            'border': '3px solid #FFDC00',
+            #  'borderRight': '4px solid #FFDC00',
+            #  'borderTop': '4px solid #FFDC00',
+            #  'borderBottom': '4px solid #FFDC00',
+        }
+    styles.append(sorted_cell_border)
+    styles.append(team_num_width)
+
     
     legend1 = legends[0]
     legend2 = legends[1]
