@@ -14,7 +14,7 @@ class sheets_data_manager:
         self.worksheet = self.google_sheet.worksheet('title', '401_raw_data')
         self.dataframe = self.worksheet.get_as_df(
             has_header=True,
-            index_column=1,
+            # index_column=0,
            	include_tailing_empty=False,
            	include_tailing_empty_rows=False,
            	# value_render='UNFORMATTED_VALUE',
@@ -24,7 +24,7 @@ class sheets_data_manager:
         # print('flag')
         self.dataframe = self.worksheet.get_as_df(
             has_header=True,
-            # index_column=5,
+            # index_column=0,
          	include_tailing_empty=False,
          	include_tailing_empty_rows=False,
          	# value_render='FORMATTED_VALUE'
@@ -34,8 +34,8 @@ class sheets_data_manager:
     def get_google_sheets_dataframe(self):
         return self.dataframe
     
-    def get_duplicates_series(self):
-        data_id_value_counts = self.dataframe.index.value_counts()
+    def get_duplicates_series(self, df):
+        data_id_value_counts = df.value_counts(subset='data_id')
         duplicates_series = data_id_value_counts[data_id_value_counts > 1]
         ls = duplicates_series.index.tolist()
         teams = [i.split('_')[0] for i in ls]
