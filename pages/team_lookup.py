@@ -37,10 +37,12 @@ layout = dbc.Container([
         dbc.Col([
             select_team := dcc.Dropdown(
                              options=teams_list,
-                             value="401",
+                             value=401,
+                             id='select_team',
+                             persistence=True,
                              multi=False,
                              searchable=False,
-                             className='mb-4 text-primary d-flex justify-content-around"'
+                             className='mb-4 text-primary d-flex justify-content-around'
                              )
                 ], xs=12, sm=12, md=3, lg=3, xl=3),#width={'size': 3}),
         
@@ -55,7 +57,7 @@ layout = dbc.Container([
                                      className='d-flex justify-content-md-end justify-content-sm-start'
                     )
                 ], xs=12, sm=12, md=3, lg=3, xl=3),  # width={'size': 3})
-    ], className="d-flex justify-content-around"),
+    ], className="d-flex justify-content-between"),
     
     html.Br(),
     
@@ -67,7 +69,7 @@ layout = dbc.Container([
                  html.Div(html.I(html.B('Autonomous Game Pieces Scored')),
                 className='d-flex justify-content-center py-4 px-2',
                           style={"color": "#2a3f5f", "font-size": 20,
-                'font-family': 'DejaVu Sans'}),
+                'font-family': 'Open Sans'}),
                 
             auto_grid_graph := dcc.Graph(figure={}, config=config),
             html.Br()])],
@@ -83,15 +85,29 @@ layout = dbc.Container([
                  html.Div(html.I(html.B('Teleop Game Pieces Scored')),
                           className='d-flex justify-content-center py-4 px-2',
                           style={"color": "#2a3f5f", "font-size": 20,
-                                 'font-family': 'DejaVu Sans'}),
+                                 'font-family': 'Open Sans'}),
 
                  tele_grid_graph := dcc.Graph(figure={}, config=config),
                  html.Br()])],
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
     ),
+
     
-    html.Br()
+    html.Br(),
+    
+    dbc.Row(
+        dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
+                 html.Div(html.I(html.B('Cone vs Cube')),
+                          className='d-flex justify-content-center py-4 px-2',
+                          style={"color": "#2a3f5f", "font-size": 20,
+                                 'font-family': 'Open Sans'}),
+
+                 piece_pie_graph := dcc.Graph(figure={}, config=config),
+                 html.Br()])],
+                xs=12, sm=12, md=12, lg=12, xl=12,
+                )
+    )
     
 ])
 
@@ -100,7 +116,8 @@ layout = dbc.Container([
         Output(team_name_string, component_property='children'),
         Output(team_location, component_property='children'),
         Output(auto_grid_graph, 'figure'),
-        Output(tele_grid_graph, 'figure')
+        Output(tele_grid_graph, 'figure'),
+        Output(piece_pie_graph, 'figure'),
     ],
     [
     	Input(select_team, component_property='value'),
@@ -364,9 +381,42 @@ def update_profile(select_team, session_database):
         hoverinfo='skip',
         showlegend=False
     ))
+    
+    
+    ##########################
+    
+    cones_count_series = (
+        ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Tele Cones Top'])) +
+        ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Tele Cones Mid'])) +
+        ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Tele Cones Low'])))
+    cones_count_series.rename('Cones', inplace=True)
+    
+    cubes_count_series = (
+        ((team_scouting_results['Auto Cubes Top'] + team_scouting_results['Tele Cubes Top'])) +
+        ((team_scouting_results['Auto Cubes Mid'] + team_scouting_results['Tele Cubes Mid'])) +
+        ((team_scouting_results['Auto Cubes Low'] + team_scouting_results['Tele Cubes Low'])))
+    cubes_count_series.rename('Cubes', inplace=True)
 
-     
-    return [f'Team {select_team} - {nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig]
+    team_avgs = pd.DataFrame([{"Cones Scored": cones_count_series.sum(), "Cubes Scored": cubes_count_series.sum()}])
+    
+    colors = ['gold', 'Plotly[3]']
+
+    pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
+    pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='percent', textfont_size=18,
+                      marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+    
+    pieces_pie_chart.update_layout(
+        legend=dict(
+            # entrywidthmode='fraction',
+            entrywidth=100,
+            orientation='h',
+            yanchor="bottom",
+            y=1.1,
+            xanchor="center",
+            x=0.5
+        ))
+    
+    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, pieces_pie_chart]
 
 
 
