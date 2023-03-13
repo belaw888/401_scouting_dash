@@ -69,7 +69,7 @@ layout = dbc.Container([
                  html.Div(html.I(html.B('Autonomous Game Pieces Scored')),
                 className='d-flex justify-content-center py-4 px-2',
                           style={"color": "#2a3f5f", "font-size": 20,
-                'font-family': 'DejaVu Sans'}),
+                'font-family': 'Open Sans'}),
                 
             auto_grid_graph := dcc.Graph(figure={}, config=config),
             html.Br()])],
@@ -85,7 +85,7 @@ layout = dbc.Container([
                  html.Div(html.I(html.B('Teleop Game Pieces Scored')),
                           className='d-flex justify-content-center py-4 px-2',
                           style={"color": "#2a3f5f", "font-size": 20,
-                                 'font-family': 'DejaVu Sans'}),
+                                 'font-family': 'Open Sans'}),
 
                  tele_grid_graph := dcc.Graph(figure={}, config=config),
                  html.Br()])],
@@ -101,7 +101,7 @@ layout = dbc.Container([
                  html.Div(html.I(html.B('Cone vs Cube')),
                           className='d-flex justify-content-center py-4 px-2',
                           style={"color": "#2a3f5f", "font-size": 20,
-                                 'font-family': 'DejaVu Sans'}),
+                                 'font-family': 'Open Sans'}),
 
                  piece_pie_graph := dcc.Graph(figure={}, config=config),
                  html.Br()])],
@@ -397,9 +397,24 @@ def update_profile(select_team, session_database):
         ((team_scouting_results['Auto Cubes Low'] + team_scouting_results['Tele Cubes Low'])))
     cubes_count_series.rename('Cubes', inplace=True)
 
-    team_avgs = pd.DataFrame([{"cones": cones_count_series.sum(), "cubes": cubes_count_series.sum()}])
+    team_avgs = pd.DataFrame([{"Cones Scored": cones_count_series.sum(), "Cubes Scored": cubes_count_series.sum()}])
     
+    colors = ['gold', 'Plotly[3]']
+
     pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
+    pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='percent', textfont_size=18,
+                      marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+    
+    pieces_pie_chart.update_layout(
+        legend=dict(
+            # entrywidthmode='fraction',
+            entrywidth=100,
+            orientation='h',
+            yanchor="bottom",
+            y=1.1,
+            xanchor="center",
+            x=0.5
+        ))
     
     return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, pieces_pie_chart]
 

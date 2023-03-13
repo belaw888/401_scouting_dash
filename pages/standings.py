@@ -126,6 +126,11 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
 #     return styles
 
 layout = dbc.Container([
+    dbc.Row([
+            html.H4(html.B('Point Averages (Sort By):'),
+                    className='d-flex justify-content-md-center justify-content-sm-start'
+                                        )
+            ]),
     dbc.Row(
         sort_by := dcc.Dropdown(options=columns_list,
                          value=columns_list[0],
