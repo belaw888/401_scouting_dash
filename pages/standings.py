@@ -56,24 +56,59 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
     
     # print(columns_array)
     styles = []
-    multiple_legends = []    
+    legend = []
+    bounds = [i * (1.0 / n_bins) for i in range(n_bins + 1)]
+    
+    
+    backgroundColor = colorlover.scales[str(n_bins)]['seq'][colorscale_names[0]]
+
+    legend = [
+        html.Div(style={'display': 'inline-block', 'width': '60px'}, children=[
+            html.Div(
+                style={
+                    'backgroundColor': backgroundColor[index],
+                    'borderLeft': '1px rgb(50, 50, 50) solid',
+                    'height': '10px'
+                }
+            ),
+            html.Small('q' + str(int(int(val*100)/20)), style={
+                'paddingLeft': '2px'})])
+        
+        for index, val in enumerate(bounds[1:])]
+     
+    
+    # multiple_legends = []    
     for count, column_sets in enumerate(columns_array, start=0):
         # print(column_sets)
         # print('done')
-        bounds = [i * (1.0 / n_bins) for i in range(n_bins + 1)]
+        
+        #bounds between zero and one
         
         df_numeric_columns = df[column_sets]
+        
+        # print(df_numeric_columns)
         df_max = df_numeric_columns.max().max()
         df_min = df_numeric_columns.min().min()
-        ranges = [
-            ((df_max - df_min) * i) + df_min
-            for i in bounds
+        # print(df_max)
+        # print(df_min)
+        # ranges = [
+        #     ((df_max - df_min) * i) + df_min
+        #     for i in bounds
+        # ]
+        quartiles = [
+            round(df_numeric_columns.quantile(i)[0], 2) for i in bounds[1:]
         ]
+        
+        print(quartiles)
+        
+        # print(ranges)
         # styles = []
-        legend = []
+        
+        # print(type(count))
+        
         for i in range(1, len(bounds)):
-            min_bound = ranges[i - 1]
-            max_bound = ranges[i]
+            min_bound = quartiles[i - 2]
+            max_bound = quartiles[i - 1]
             backgroundColor = colorlover.scales[str(n_bins)]['seq'][colorscale_names[count]][i - 1]
             color = 'black' #if i > len(bounds) / 2. else 'inherit'
 
@@ -90,24 +125,20 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
                     'backgroundColor': backgroundColor,
                     'color': color
                 })
-            legend.append(
-                html.Div(style={'display': 'inline-block', 'width': '60px'}, children=[
-                    html.Div(
-                        style={
-                            'backgroundColor': backgroundColor,
-                            'borderLeft': '1px rgb(50, 50, 50) solid',
-                            'height': '10px'
-                        }
-                    ),
-                    html.Small(round(min_bound, 2), style={'paddingLeft': '2px'})
-                ])
-            )
+        
+    
+        # print(count)
+        
+        
+                   
+               
+        # print(legend)
         # styles.append(styles)
-        multiple_legends.append(legend)
+       
 # html.Div(legends, style={'padding': '5px 0 5px 0'})
     # print (styles)
 
-    return (styles, multiple_legends)
+    return (styles, legend)
 
 
 # def highlight_sorted_by_column(column_list):
@@ -131,6 +162,7 @@ layout = dbc.Container([
                     className='d-flex justify-content-md-center justify-content-sm-start'
                                         )
             ]),
+    
     dbc.Row(
         sort_by := dcc.Dropdown(options=columns_list,
                          value=columns_list[0],
@@ -139,6 +171,8 @@ layout = dbc.Container([
                          multi=False,
                          searchable=False,
                          className='mb-4 text-primary d-flex justify-content-around"')),
+    
+    dbc.Row(legend := html.Div(style={'float': 'right'})),
     
     dbc.Row([
         table := dash_table.DataTable(
@@ -175,82 +209,53 @@ layout = dbc.Container([
 ])
 
 @callback(
-    [Output(table, 'data'), Output(table, 'columns'),
-     Output(table, 'style_data_conditional')],
+    [Output(table, 'data'), 
+     Output(table, 'columns'),
+     Output(table, 'style_data_conditional'),
+     Output(legend, 'children')],
     
     [Input('session_database', 'data'),
+     Input('session_analysis_database', 'data'),
      Input(sort_by, 'value')]
 )
 
-def show_data_table(session_database, sort_by):
+def show_data_table(session_database, session_analysis_database, sort_by):
     
-    scouting_results = sheets.parse_json(session_database)
+    # scouting_results = sheets.parse_json(session_database)
+    scouting_analysis_results = sheets.parse_json(session_analysis_database)
     
-    df = scouting_results.copy()
+    analysis = scouting_analysis_results.copy()
     new_df = pd.DataFrame(columns=columns_list)
     
-    for team in df['Team Number'].unique():
-        team_filter = df['Team Number'] == team
-        team_scouting_results = df.loc[team_filter]
-        # avg_auto_cones = team_df['Auto Cones Picked Up'].describe()
-        
-        # team_scouting_results.drop_duplicates(inplace=True, subset=['data_id'])
-        
-        # print(type(team_scouting_results['Auto Charge']))
-        # print(team_scouting_results.columns)
-        
+    for team in scouting_analysis_results['Team Number'].unique():
+        team_filter = scouting_analysis_results['Team Number'] == team
+        analysis = scouting_analysis_results.loc[team_filter]
+
         aggregate_list = []
         
+        # print(analysis)
+        
         for cols in columns_list:
-            
-           auto_grid_points_series = (
-                    ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Auto Cubes Top']) * Points.AUTO_TOP) + 
-                    ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Auto Cubes Mid']) * Points.AUTO_MID) +
-                    ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Auto Cubes Low']) * Points.AUTO_LOW))
-            
-           tele_grid_points_series = (
-                    ((team_scouting_results['Tele Cones Top'] + team_scouting_results['Tele Cubes Top']) * Points.TELE_TOP) +
-                    ((team_scouting_results['Tele Cones Mid'] + team_scouting_results['Tele Cubes Mid']) * Points.TELE_MID) +
-                    ((team_scouting_results['Tele Cones Low'] + team_scouting_results['Tele Cubes Low']) * Points.TELE_LOW))
-
-           auto_charge_points_series = team_scouting_results['Auto Charge'].map(
-               {'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': None, 'Failed': 0}) #we only care about how many times they tried to vs failed right?
-            
-           tele_charge_points_series = team_scouting_results['End Charge'].map(
-               {'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': None, 'Failed': 0})
-
-           mobility_points_series = team_scouting_results['Mobility'].map({'TRUE': Points.MOBILITY, '': 0})
-            
-           total_grid_points_series = auto_grid_points_series.add(tele_grid_points_series, fill_value=0)
-           total_charge_points_series = auto_charge_points_series.add(tele_charge_points_series, fill_value=0)
-           
-           total_points_series = (total_charge_points_series.add(total_grid_points_series, fill_value=0)).add(mobility_points_series, fill_value=0)
-           
+        
         #    print(total_grid_points_series)
-            
-           if cols == 'Total Points':
-                aggregate_list.append(total_points_series.mean())
-                
-           elif cols == 'Auto Grid Points':
-                aggregate_list.append(auto_grid_points_series.mean())
                     
-           elif cols == 'Auto Charge Points':
-                mean = auto_charge_points_series.mean()
+           if cols == 'Auto Charge Points':
+                mean = analysis[cols].mean()
                 if mean is numpy.nan:
                     aggregate_list.append(numpy.nan)
                 else:
                     aggregate_list.append(mean)
                 #should only count attempted ones for avg
-                
-           elif cols == 'Tele Grid Points':
-                aggregate_list.append(tele_grid_points_series.mean())
                     
            elif cols == 'Endgame Charge Points':
-                mean = tele_charge_points_series.mean()
+                mean = analysis[cols].mean()
                 if mean is numpy.nan:
                     aggregate_list.append(numpy.nan)
                 else:
                     aggregate_list.append(mean)
+                    
+           else:
+                aggregate_list.append(analysis[cols].mean())
 
         
         team_avgs = pd.DataFrame([aggregate_list],
@@ -272,7 +277,7 @@ def show_data_table(session_database, sort_by):
     # data = scouting_results.to_dict('records')
     # columns = [{"name": i, "id": i} for i in scouting_results.columns]
    
-    (styles, legends) = discrete_background_color_bins(new_df, 
+    (styles, legend) = discrete_background_color_bins(new_df, 
                                                       columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]], [columns_list[4]]],
                                                       colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
     
@@ -294,14 +299,10 @@ def show_data_table(session_database, sort_by):
     styles.append(sorted_cell_border)
     styles.append(team_num_width)
 
-    
-    legend1 = legends[0]
-    legend2 = legends[1]
-    legend3 = legends[2]
-    
     # print(styles[0])
     
-    return data, columns, styles
+    # print(legend)
+    return [data, columns, styles, legend]
 
 # def show_div(data):
 #     dict = json.loads(data)

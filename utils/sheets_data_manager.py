@@ -1,9 +1,27 @@
 import pandas as pd
 import pygsheets
 import json
+from enum import IntEnum
+
+class Points(IntEnum):
+    AUTO_TOP = 6
+    AUTO_MID = 4
+    AUTO_LOW = 3
+    TELE_TOP = 5
+    TELE_MID = 3
+    TELE_LOW = 2
+    LINK = 5
+    AUTO_DOCKED = 8
+    AUTO_ENGAGED = 12
+    TELE_DOCKED = 6
+    TELE_ENGAGED = 10
+    MOBILITY = 3
+    PARK = 2
+
 
 class sheets_data_manager:
-    dataframe = pd.DataFrame()
+    raw_dataframe = pd.DataFrame()
+    analysis_dataframe = pd.DataFrame()
     
     def __init__(self) -> None:
         self.credentials = pygsheets.authorize(
@@ -12,27 +30,27 @@ class sheets_data_manager:
         self.google_sheet = self.credentials.open(
             '[401 & 422 Scouting] - VABLA - 2023 Charged Up Database')
         self.worksheet = self.google_sheet.worksheet('title', '401_raw_data')
-        self.dataframe = self.worksheet.get_as_df(
+        self.raw_dataframe = self.worksheet.get_as_df(
             has_header=True,
-            # index_column=0,
            	include_tailing_empty=False,
            	include_tailing_empty_rows=False,
-           	# value_render='UNFORMATTED_VALUE',
             numerize=True)
+        self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
         
     def refresh_google_sheets_dataframe(self):
-        # print('flag')
-        self.dataframe = self.worksheet.get_as_df(
+        self.raw_dataframe = self.worksheet.get_as_df(
             has_header=True,
-            # index_column=0,
          	include_tailing_empty=False,
          	include_tailing_empty_rows=False,
-         	# value_render='FORMATTED_VALUE'
             numerize=True)
-        # return self.dataframe
+        self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
+
     
     def get_google_sheets_dataframe(self):
-        return self.dataframe
+        return self.raw_dataframe
+    
+    def get_analysis_dataframe(self):
+        return self.analysis_dataframe
     
     def get_duplicates_series(self, df):
         data_id_value_counts = df.value_counts(subset='data_id')
@@ -44,28 +62,20 @@ class sheets_data_manager:
         
         dict = {'Team Number': teams, 'Match Number': matches, '# of Duplicates': duplicates}
         
-        # print(teams, matches, duplicates)
         df = pd.DataFrame(dict)
-        # print(df)
-        # duplicates_list = duplicates_series.index.tolist()
-        # print(duplicates_list)
-        # duplicates_dict = duplicates_series
-        # print(duplicates_dict)
         return df
-        # for key in duplicates_dict:
-        #     print(f'Warning! there are duplicate data points for {key}')
         
     def get_team_data(self, team):
-        filter = self.dataframe['Team Number'] == team
-        return self.dataframe.loc[filter]
+        filter = self.raw_dataframe['Team Number'] == team
+        return self.raw_dataframe.loc[filter]
         
     def get_team_list(self):
-      list = self.dataframe['Team Number'].unique().tolist()
+      list = self.raw_dataframe['Team Number'].unique().tolist()
       list.sort()
       return list        
   
-    def get_as_json(self):
-        return json.dumps(self.dataframe, default=lambda df: json.loads(df.to_json(orient='split')))
+    def get_as_json(self, dataframe):
+        return json.dumps(dataframe, default=lambda df: json.loads(df.to_json(orient='split')))
   
     def parse_json(self, json_string):
         dict = json.loads(json_string)
@@ -76,16 +86,62 @@ class sheets_data_manager:
     def get_team_data_static(self, dataframe, team):
         filter = dataframe['Team Number'] == team
         return dataframe.loc[filter]
-  
-# f = sheets_data_manager()
-# # print(f.get_google_sheets_dataframe())
-# # print(f.get_duplicates_dict())
-# # print(f.get_team_data(401))
-# # print(f.get_team_data(881))
-# # print(type(f.get_team_list()))
-# # print(f.get_team_list())
-# json_data = f.get_as_json()
-# dict = json.loads(json_data)
-# df = pd.DataFrame(dict['data'], columns=dict['columns'], index=dict['index'])
-# print(df)
-# print(f.get_google_sheets_dataframe() == df)
+    
+    def update_analysis_dataframe(self, team_scouting_results):
+        
+        partial_df = team_scouting_results.loc[:,'data_id':'Preload']
+        
+        auto_grid_points_series = (
+            ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Auto Cubes Top']) * Points.AUTO_TOP) +
+            ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Auto Cubes Mid']) * Points.AUTO_MID) +
+            ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Auto Cubes Low']) * Points.AUTO_LOW))
+        auto_grid_points_series.rename('Auto Grid Points', inplace=True)
+
+        
+        tele_grid_points_series = (
+            ((team_scouting_results['Tele Cones Top'] + team_scouting_results['Tele Cubes Top']) * Points.TELE_TOP) +
+            ((team_scouting_results['Tele Cones Mid'] + team_scouting_results['Tele Cubes Mid']) * Points.TELE_MID) +
+            ((team_scouting_results['Tele Cones Low'] + team_scouting_results['Tele Cubes Low']) * Points.TELE_LOW))
+        tele_grid_points_series.rename('Tele Grid Points', inplace=True)
+
+
+        auto_charge_points_series = team_scouting_results['Auto Charge'].map(
+            {'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': None, 'Failed': 0})  # we only care about how many times they tried to vs failed right?
+        auto_charge_points_series.rename('Auto Charge Points', inplace=True)
+
+
+        tele_charge_points_series = team_scouting_results['End Charge'].map(
+            {'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': None, 'Failed': 0})
+        tele_charge_points_series.rename('Endgame Charge Points', inplace=True)
+
+        mobility_points_series = team_scouting_results['Mobility'].map(
+            {'TRUE': Points.MOBILITY, '': 0})
+        mobility_points_series.rename('Mobility Points', inplace=True)
+
+        total_grid_points_series = auto_grid_points_series.add(
+            tele_grid_points_series, fill_value=0)
+        total_grid_points_series.rename('Total Grid Points', inplace=True)
+
+        
+        total_charge_points_series = auto_charge_points_series.add(
+            tele_charge_points_series, fill_value=0)
+        total_charge_points_series.rename('Total Charge Points', inplace=True)
+
+
+        total_points_series = (total_charge_points_series.add(
+            total_grid_points_series, fill_value=0)).add(mobility_points_series, fill_value=0)
+        total_points_series.rename('Total Points', inplace=True)
+
+        analysis_df = pd.concat([partial_df, 
+                        auto_grid_points_series, 
+                        tele_grid_points_series, 
+                        auto_charge_points_series,
+                        tele_charge_points_series,
+                        mobility_points_series,
+                        total_grid_points_series,
+                        total_charge_points_series,
+                        total_points_series], axis=1)
+        
+        # print(analysis_df)
+        
+        return analysis_df
