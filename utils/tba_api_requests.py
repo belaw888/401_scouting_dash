@@ -23,6 +23,12 @@ class tba_api_requests:
     
     def event_match_keys(self, event_key):
         return self.tba.event_matches(event_key, keys = True)
+    
+    def match_robots(self, match_key):
+        json_data = self.tba.match(match_key)
+        data = self.tbapy_to_dict(json_data)
+        return data['alliances']['blue']['team_keys'] + data['alliances']['red']['team_keys']
+
         
     def match_aggregate_data(self, match_key):
         
