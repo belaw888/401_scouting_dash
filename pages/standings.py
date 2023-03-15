@@ -213,6 +213,7 @@ layout = dbc.Container([
         ignore := dcc.Dropdown(
                          options=teams_list,
                          persistence=True,
+                         value=[],
                          id='ignore',
                          multi=True,
                          searchable=False,
