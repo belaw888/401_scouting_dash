@@ -47,6 +47,7 @@ columns_list = ['Total Points',
                 # ]
 
 sheets = manager.sheets_data_manager()
+teams_list = sheets.get_team_list()
 
 # app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 dash.register_page(__name__, path='/')
@@ -170,9 +171,9 @@ layout = dbc.Container([
                          id='sort_by',
                          multi=False,
                          searchable=False,
-                         className='mb-4 text-primary d-flex justify-content-around"')),
+                         className='mb-4 text-primary d-flex justify-content-around')),
     
-    dbc.Row(legend := html.Div(style={'float': 'right'})),
+    dbc.Row(legend := html.Div(id='standings_legend', style={'float': 'right'})),
     
     dbc.Row([
         table := dash_table.DataTable(
@@ -200,7 +201,22 @@ layout = dbc.Container([
         )
     ]),
     
-    html.Br()
+    html.Br(),
+    
+    dbc.Row([
+            html.H4(html.B('Ignore Teams:'),
+                    className='d-flex justify-content-md-center justify-content-sm-start'
+                    )
+            ]),
+    
+    dbc.Row(
+        ignore := dcc.Dropdown(
+                         options=teams_list,
+                         persistence=True,
+                         id='ignore',
+                         multi=True,
+                         searchable=False,
+                         className='mb-4 text-primary d-flex justify-content-around"')),
     
     # df.to_dict('records'), [
     #     {"name": i, "id": i} for i in df.columns], id='tbl',
@@ -216,10 +232,11 @@ layout = dbc.Container([
     
     [Input('session_database', 'data'),
      Input('session_analysis_database', 'data'),
-     Input(sort_by, 'value')]
+     Input(sort_by, 'value'),
+     Input(ignore, 'value')]
 )
 
-def show_data_table(session_database, session_analysis_database, sort_by):
+def show_data_table(session_database, session_analysis_database, sort_by, ignore):
     
     # scouting_results = sheets.parse_json(session_database)
     scouting_analysis_results = sheets.parse_json(session_analysis_database)
@@ -228,6 +245,10 @@ def show_data_table(session_database, session_analysis_database, sort_by):
     new_df = pd.DataFrame(columns=columns_list)
     
     for team in scouting_analysis_results['Team Number'].unique():
+        
+        if (team in ignore):
+            continue
+        
         team_filter = scouting_analysis_results['Team Number'] == team
         analysis = scouting_analysis_results.loc[team_filter]
 
@@ -282,6 +303,7 @@ def show_data_table(session_database, session_analysis_database, sort_by):
                                                       colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
     
     new_df.fillna("N/A", inplace=True)
+    
     data = new_df.to_dict('records')
     columns = [{"name": i, "id": i} for i in new_df.columns]
     
@@ -296,6 +318,8 @@ def show_data_table(session_database, session_analysis_database, sort_by):
             #  'borderTop': '4px solid #FFDC00',
             #  'borderBottom': '4px solid #FFDC00',
         }
+    
+    
     styles.append(sorted_cell_border)
     styles.append(team_num_width)
 

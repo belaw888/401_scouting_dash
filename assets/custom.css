@@ -13,5 +13,25 @@ body {
 	font-family: "OpenSans-Bold";
 }
 
+#standings_legend {
+	margin-bottom: 1em;
+}
+
+#ignore {
+	margin-bottom: 200px;
+}
+
+.col {
+	justify-content: center;
+	outline-color: azure;
+	padding-left: 0px;
+	padding-right: 0px;
+	
+}
+
+.row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
 /* h4 {
 	/* font-size: 1.5rem; */
