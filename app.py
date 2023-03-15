@@ -44,6 +44,8 @@ topbar = dbc.Nav(
 app.layout = dbc.Container([
     
     dcc.Store(id='session_database', storage_type='session'),
+    dcc.Store(id='session_analysis_database', storage_type='session'),
+    
     
     dbc.Row([
         # dbc.Col(html.Div(html.Img(src=dash.get_asset_url('assets/index.jpeg'))),
@@ -81,15 +83,17 @@ app.layout = dbc.Container([
 
 
 @app.callback(
-    Output('session_database', 'data'),
+   [Output('session_database', 'data'),
+    Output('session_analysis_database', 'data')],
     Input(update_button, 'n_clicks')
 )
 
 def update_session_data(n_clicks):
     sheets.refresh_google_sheets_dataframe()
-    json_string = sheets.get_as_json()
+    raw_json_string = sheets.get_as_json(sheets.get_google_sheets_dataframe())
+    analysis_json_string = sheets.get_as_json(sheets.get_analysis_dataframe())
     
-    return json_string
+    return [raw_json_string, analysis_json_string]
 
 # @app.callback(
 #     Output('test', 'children'),
