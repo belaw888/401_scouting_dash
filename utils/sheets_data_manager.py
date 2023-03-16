@@ -131,6 +131,46 @@ class sheets_data_manager:
         total_points_series = (total_charge_points_series.add(
             total_grid_points_series, fill_value=0)).add(mobility_points_series, fill_value=0)
         total_points_series.rename('Total Points', inplace=True)
+        
+        auto_cones_count_series = (
+            (team_scouting_results['Auto Cones Top']) +
+            (team_scouting_results['Auto Cones Mid']) +
+            (team_scouting_results['Auto Cones Low']))
+        auto_cones_count_series.rename('Auto Cones', inplace=True)
+
+
+        auto_cubes_count_series = (
+            (team_scouting_results['Auto Cubes Top']) +
+            (team_scouting_results['Auto Cubes Mid']) +
+            (team_scouting_results['Auto Cubes Low']))
+        auto_cubes_count_series.rename('Auto Cubes', inplace=True)
+
+        auto_pieces_count_series = auto_cones_count_series.add(auto_cubes_count_series)
+        auto_pieces_count_series.rename('Auto Pieces', inplace=True)
+
+        tele_cones_count_series = (
+            (team_scouting_results['Tele Cones Top']) +
+            (team_scouting_results['Tele Cones Mid']) +
+            (team_scouting_results['Tele Cones Low']))
+        tele_cones_count_series.rename('Tele Cones', inplace=True)
+        
+        tele_cubes_count_series = (
+            (team_scouting_results['Tele Cubes Top']) +
+            (team_scouting_results['Tele Cubes Mid']) +
+            (team_scouting_results['Tele Cubes Low']))
+        tele_cubes_count_series.rename('Tele Cubes', inplace=True)
+        
+        tele_pieces_count_series = tele_cones_count_series.add(tele_cubes_count_series)
+        tele_pieces_count_series.rename('Tele Pieces', inplace=True)
+
+        total_cubes_count_series = tele_cubes_count_series.add(auto_cubes_count_series)
+        total_cubes_count_series.rename('Total Cubes', inplace=True)
+        
+        total_cones_count_series = tele_cones_count_series.add(auto_cones_count_series)
+        total_cones_count_series.rename('Total Cones', inplace=True)
+        
+        total_pieces_count_series = tele_pieces_count_series.add(auto_pieces_count_series)
+        total_pieces_count_series.rename('Total Pieces', inplace=True)
 
         analysis_df = pd.concat([partial_df, 
                         auto_grid_points_series, 
@@ -140,7 +180,17 @@ class sheets_data_manager:
                         mobility_points_series,
                         total_grid_points_series,
                         total_charge_points_series,
-                        total_points_series], axis=1)
+                        total_points_series,
+                        auto_cones_count_series,
+                        auto_cubes_count_series,
+                        auto_pieces_count_series,
+                        tele_cones_count_series,
+                        tele_cubes_count_series,
+                        tele_pieces_count_series,
+                        total_cones_count_series,
+                        total_cubes_count_series,
+                        total_pieces_count_series
+                        ], axis=1)
         
         # print(analysis_df)
         

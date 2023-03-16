@@ -22,11 +22,18 @@ body {
 }
 
 .col {
-	justify-content: center;
+	/* justify-content: center; */
 	outline-color: azure;
 	padding-left: 0px;
 	padding-right: 0px;
 	
+}
+
+.col-2 {
+	padding-left: 0px;
+	padding-right: 0px;
+	height: 50%;
+
 }
 
 .row {

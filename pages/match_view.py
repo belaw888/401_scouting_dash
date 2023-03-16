@@ -86,15 +86,17 @@ layout = dbc.Container([
         Output(teams, component_property='children'),
     ],
     [
-    	Input(select_match, component_property='value')
+    	Input(select_match, component_property='value'),
+        Input('session_analysis_database', 'data')
     ]
 )
-def update_profile(select_match):
+def update_profile(select_match, session_analysis_database):
+    analysis = sheets.parse_json(session_analysis_database)
     
     match_key = event_key + '_' + select_match
     
     match_robots = tba.match_robots(match_key)
-    print(match_robots)
+    # print(match_robots)
     team_nums = [int(num.split('c')[1]) for num in match_robots]
     blue_teams = team_nums[:3]
     red_teams = team_nums[3:]
@@ -106,9 +108,49 @@ def update_profile(select_match):
     
     [dbc.Col(html.Div(i, className=blue_className)) for i in blue_teams] +
     [dbc.Col(html.Div(i, className=red_className))for i in red_teams])
-             
-    filler = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-2')) for i in range(7, 13)])] 
-    filler1 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-2')) for i in range(13, 25)])]
+    
+    avg_points = [analysis.loc[analysis['Team Number'] == team]['Total Points'].mean() for team in team_nums]
+    avg_points = [round(avg, 2) for avg in avg_points]
+    
+    max_points = [analysis.loc[analysis['Team Number'] == team]['Total Points'].max() for team in team_nums]
+    max_points = [round(max, 2) for max in max_points]
+    
+    points = []
+    charts = []
+    for team in team_nums:
+        team_stats = analysis.loc[analysis['Team Number'] == team]
+        total_points = team_stats['Total Points']
+        total_cubes_series = team_stats['Total Cubes']
+        total_cones_series = team_stats['Total Cones']
+        
+        non_zero_low_points = total_points[total_points != 0].min()
+        avg_points = total_points.mean()
+        high_points = total_points.max()
+        
+        points.append(round(non_zero_low_points, 2))
+        points.append(round(avg_points, 2))
+        points.append(round(high_points, 2))
+        
+        team_avgs = pd.DataFrame(
+            [{"Cones Scored": total_cones_series.sum(), "Cubes Scored": total_cubes_series.sum()}])
+
+        colors = ['gold', 'Plotly[3]']
+
+        # print(team_avgs)
+        pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
+        pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='none',
+                                   marker=dict(colors=colors, line=dict(color='#000000')))
+        pieces_pie_chart.update_layout(showlegend=False)
+        # print(type(pieces_pie_chart))
+        pieces_pie_chart.update_layout(margin=dict(t=0, b=0, l=0, r=0))
+        # pieces_pie_chart.update_layout(width=150, height=150)
+        charts.append(dcc.Graph(figure=pieces_pie_chart))
+        
+    
+    print(charts)
+    filler = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light text-dark border border-2')) for i in points])] 
+    
+    filler1 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-2'), width=2) for i in charts])]
              
     filler2 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-2')) for i in range(7, 13)])] 
 
