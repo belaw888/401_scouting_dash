@@ -171,7 +171,37 @@ class sheets_data_manager:
         
         total_pieces_count_series = tele_pieces_count_series.add(auto_pieces_count_series)
         total_pieces_count_series.rename('Total Pieces', inplace=True)
-
+        
+        top_cubes_series = (
+             (team_scouting_results['Auto Cubes Top']) +
+             (team_scouting_results['Tele Cubes Top']))
+        top_cubes_series.rename('Top Cubes', inplace=True)
+        
+        top_cones_series = (
+             (team_scouting_results['Auto Cones Top']) +
+             (team_scouting_results['Tele Cones Top']))
+        top_cones_series.rename('Top Cones', inplace=True)
+        
+        mid_cubes_series = (
+             (team_scouting_results['Auto Cubes Mid']) +
+             (team_scouting_results['Tele Cubes Mid']))
+        mid_cubes_series.rename('Mid Cubes', inplace=True)
+        
+        mid_cones_series = (
+             (team_scouting_results['Auto Cones Mid']) +
+             (team_scouting_results['Tele Cones Mid']))
+        mid_cones_series.rename('Mid Cones', inplace=True)
+        
+        low_cubes_series = (
+             (team_scouting_results['Auto Cubes Low']) +
+             (team_scouting_results['Tele Cubes Low']))
+        low_cubes_series.rename('Low Cubes', inplace=True)
+        
+        low_cones_series = (
+             (team_scouting_results['Auto Cones Low']) +
+             (team_scouting_results['Tele Cones Low']))
+        low_cones_series.rename('Low Cones', inplace=True)
+        
         analysis_df = pd.concat([partial_df, 
                         auto_grid_points_series, 
                         tele_grid_points_series, 
@@ -181,6 +211,12 @@ class sheets_data_manager:
                         total_grid_points_series,
                         total_charge_points_series,
                         total_points_series,
+                        top_cubes_series,
+                        top_cones_series,
+                        mid_cones_series,
+                        mid_cubes_series,
+                        low_cubes_series,
+                        low_cones_series,
                         auto_cones_count_series,
                         auto_cubes_count_series,
                         auto_pieces_count_series,

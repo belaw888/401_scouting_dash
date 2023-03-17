@@ -1,8 +1,6 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
-from audioop import avg
-from stat import SF_APPEND
 import pandas as pd
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
@@ -10,9 +8,7 @@ import dash
 # pip install dash (version 2.0.0 or higher)
 from dash import Dash, dcc, html, callback, dash_table, Input, Output
 from plotly.subplots import make_subplots
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import numpy
-from soupsieve import select
 import utils.sheets_data_manager as manager
 import utils.tba_api_requests as tbapy
 import dash_bootstrap_components as dbc
@@ -43,6 +39,7 @@ f.sort(key=sort_match)
 # match_nums = [int(key.split('m')[1]) for key in match_keys]
 # match_keys.sort(key=lambda x: int(x.split('m')[1]) if 'f' not in x else max(match_nums) + int(x.split('f')[1].split('m')[0]))
 sorted_matches = qm + sf + f
+# print(sorted_matches[0])
 
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
 config = {'displayModeBar': False}
@@ -81,6 +78,7 @@ layout = dbc.Container([
     html.Br(),
     html.Br(),
     html.Br(),
+    
     
     
     ])
@@ -122,8 +120,12 @@ def update_profile(select_match, session_analysis_database):
     for team in team_nums:
         team_stats = analysis.loc[analysis['Team Number'] == team]
         
-        
-        
+        top_cubes = team_stats['Top Cubes']
+        top_cones = team_stats['Top Cones']
+        mid_cubes = team_stats['Mid Cubes']
+        mid_cones = team_stats['Mid Cones']
+        low_cubes = team_stats['Low Cubes']
+        low_cones = team_stats['Low Cones']
         
         total_points = team_stats['Total Points']
         total_cubes_series = team_stats['Total Cubes']
@@ -135,18 +137,32 @@ def update_profile(select_match, session_analysis_database):
         
         avgs = [round(non_zero_low_points, 2), round(avg_points, 2), round(high_points, 2)]
         
-        points.append([html.Div(i, className='text-center bg-light text-dark border border-1 py-2 d-inline-flex justify-content-center flex-grow-1') for i in avgs])
+        points.append([html.Div(i, className='text-center bg-light text-dark border border-1 py-2 d-inline-flex justify-content-center flex-grow-1 fs-6') for i in avgs])
         # points.append(round(avg_points, 2))
         # points.append(round(high_points, 2))
         
         team_avgs = pd.DataFrame(
-            [{"Cones Scored": total_cones_series.sum(), "Cubes Scored": total_cubes_series.sum()}])
+            [{"Cones Scored": total_cones_series.sum(), "Cubes Scored": total_cubes_series.sum(), 'Top Cones': top_cones.sum()}])
 
-        colors = ['gold', 'Plotly[3]']
+        colors = [px.colors.qualitative.Plotly[0], 'gold', px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[5], px.colors.qualitative.Plotly[5], px.colors.qualitative.Plotly[1], px.colors.qualitative.Plotly[1]]
 
         # print(team_avgs)
-        pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
-        pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='value', textposition='inside', insidetextorientation='auto',
+        # pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
+        pieces_pie_chart = go.Figure(
+                                       data=[go.Sunburst( 
+                                       labels=['Cubes', 'Cones', 'Top Cubes', 'Top Cones', 'Mid Cubes', 'Mid Cones', 'Low Cubes', 'Low Cones'],
+                                       parents=['',     '',       'Cubes',    'Cones',     'Cubes',     'Cones',     'Cubes',     'Cones'],
+                                       values=[total_cubes_series.sum(),
+                                               total_cones_series.sum(),
+                                               top_cubes.sum(),
+                                               top_cones.sum(),
+                                               mid_cubes.sum(),
+                                               mid_cones.sum(),
+                                               low_cubes.sum(),
+                                               low_cones.sum()],
+                                       branchvalues='total'
+                                                                        )])
+        pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='percent root',
                                    marker=dict(colors=colors, line=dict(color='#000000', width=2)))
         pieces_pie_chart.update_layout(showlegend=False)
         # print(type(pieces_pie_chart))
