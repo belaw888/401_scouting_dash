@@ -114,11 +114,29 @@ def update_profile(select_match, session_analysis_database):
     max_points = [analysis.loc[analysis['Team Number'] == team]['Total Points'].max() for team in team_nums]
     max_points = [round(max, 2) for max in max_points]
     
+    x = ['Avg Charge Points', 'Avg Grid Points']
+    
+    bar_colors = {team_nums[0]:  px.colors.qualitative.Plotly[5], team_nums[1]:  px.colors.qualitative.Plotly[2], team_nums[2]: px.colors.qualitative.Plotly[1],
+                  team_nums[3]:  px.colors.qualitative.Plotly[5], team_nums[4]:  px.colors.qualitative.Plotly[2], team_nums[5]: px.colors.qualitative.Plotly[1]}
+    
+    px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[5], px.colors.qualitative.Plotly[
+        5], px.colors.qualitative.Plotly[1], px.colors.qualitative.Plotly[1]
+    
     points = []
     piece_pie = []
-    level_pie = []
+    avg_points_bar = []
+    blue_bar_points_charge = []
+    blue_bar_points_grid = []
+    red_bar_points_charge = []
+    red_bar_points_grid = []
     for team in team_nums:
         team_stats = analysis.loc[analysis['Team Number'] == team]
+        
+        avg_charge_points = team_stats['Total Charge Points'].mean()
+        avg_charge_points = round(avg_charge_points, 2)
+    
+        avg_grid_points = team_stats['Total Grid Points'].mean() 
+        avg_grid_points = round(avg_grid_points, 2)
         
         top_cubes = team_stats['Top Cubes']
         top_cones = team_stats['Top Cones']
@@ -130,6 +148,13 @@ def update_profile(select_match, session_analysis_database):
         total_points = team_stats['Total Points']
         total_cubes_series = team_stats['Total Cubes']
         total_cones_series = team_stats['Total Cones']
+        
+        if team in blue_teams:
+            blue_bar_points_charge.append(avg_charge_points)
+            blue_bar_points_grid.append(avg_grid_points)
+        if team in red_teams:
+            red_bar_points_charge.append(avg_charge_points)
+            red_bar_points_grid.append(avg_grid_points)
         
         non_zero_low_points = total_points[total_points != 0].min()
         avg_points = total_points.mean()
@@ -171,7 +196,87 @@ def update_profile(select_match, session_analysis_database):
         # pieces_pie_chart.update_layout(width=150, height=150)
         piece_pie.append(pieces_pie_chart)
         
+        y = [avg_charge_points, avg_grid_points]
+        
+        team_trace = go.Bar(
+            x=x,
+            y=y,
+            name=team,
+            text= y,
+            textposition='inside',
+            hovertemplate="Points: %{y}" +
+            "<extra></extra>",
+            marker_color=bar_colors[team])
+        
+        # avg_grid_trace = go.Bar(
+        #     x=x,
+        #     y=avg_grid_points,
+        #     name=team,
+        #     text=avg_grid_points,
+        #     textposition='inside',
+        #     hovertemplate="Top: %{y}" +
+        #     "<extra></extra>",
+        #     marker_color='crimson')
+        
+        # avg_points_bar.append(avg_charge_trace)
+        avg_points_bar.append(team_trace)
     
+    # print(avg_points_bar)
+    
+    blue_avg_points_bar_fig = go.Figure(avg_points_bar[:3])
+    blue_avg_points_bar_fig.update_layout(barmode='stack')
+    blue_avg_points_bar_fig.update_yaxes(range=[0, 150])
+    
+    red_avg_points_bar_fig = go.Figure(avg_points_bar[3:])
+    red_avg_points_bar_fig.update_layout(barmode='stack')
+    red_avg_points_bar_fig.update_yaxes(range=[0, 150])
+    
+    red_avg_points_bar_fig.update_layout(paper_bgcolor='rgba(0,0,0,0)')
+    blue_avg_points_bar_fig.update_layout(paper_bgcolor='rgba(0,0,0,0)')
+    
+    red_bar_points_charge = sum(red_bar_points_charge)
+    red_bar_points_charge = round(red_bar_points_charge, 2)
+    red_bar_points_grid = sum(red_bar_points_grid)
+    red_bar_points_grid = round(red_bar_points_grid, 2)
+
+    red_avg_points_bar_fig.add_trace(go.Scatter(
+        x=x,
+        y=[red_bar_points_charge, red_bar_points_grid],
+        text=['<b>' + str(red_bar_points_charge) + '</b>',
+              '<b>' + str(red_bar_points_grid) + '</b>'],
+        mode='text',
+        textposition='top center',
+        textfont=dict(
+            size=15,
+        ),
+        hovertemplate=None,
+        hoverinfo='skip',
+        showlegend=False
+    ))
+    
+    blue_bar_points_charge = sum(blue_bar_points_charge)
+    blue_bar_points_charge = round(blue_bar_points_charge, 2)
+    blue_bar_points_grid = sum(blue_bar_points_grid)
+    blue_bar_points_grid = round(blue_bar_points_grid, 2)
+    
+    blue_avg_points_bar_fig.add_trace(go.Scatter(
+        x=x,
+        y=[blue_bar_points_charge, blue_bar_points_grid],
+        text=['<b>' + str(blue_bar_points_charge) + '</b>',
+              '<b>' + str(blue_bar_points_grid) + '</b>'],
+        mode='text',
+        textposition='top center',
+        textfont=dict(
+            size=15,
+        ),
+        hovertemplate=None,
+        hoverinfo='skip',
+        showlegend=False
+    ))
+    
+    # bar_points_contribution
+    bar = [blue_avg_points_bar_fig, red_avg_points_bar_fig]
+        
     teams_layout = dbc.Row(
     
     [dbc.Col(html.B(html.Div(i, className=blue_className))) for i in blue_teams] +
@@ -182,7 +287,7 @@ def update_profile(select_match, session_analysis_database):
     
     filler1 = [dbc.Row([dbc.Col(dcc.Graph(figure=i, id='pie_pieces', className='text-center bg-light border border-3'), width=2) for i in piece_pie])]
              
-    filler2 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(7, 13)])] 
+    filler2 = [dbc.Row([dbc.Col(dcc.Graph(figure=i, id='bar_points_contribution', className='text-center bg-light border border-3'), width=6) for i in bar])] 
 
     filler3 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(1, 3)])] 
 

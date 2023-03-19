@@ -34,7 +34,8 @@ class sheets_data_manager:
             has_header=True,
            	include_tailing_empty=False,
            	include_tailing_empty_rows=False,
-            numerize=True)
+            numerize=True,
+            value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
         
     def refresh_google_sheets_dataframe(self):
@@ -42,7 +43,8 @@ class sheets_data_manager:
             has_header=True,
          	include_tailing_empty=False,
          	include_tailing_empty_rows=False,
-            numerize=True)
+            numerize=True,
+            value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
 
     
