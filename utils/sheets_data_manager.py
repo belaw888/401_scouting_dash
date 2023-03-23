@@ -33,7 +33,8 @@ class sheets_data_manager:
             has_header=True,
            	include_tailing_empty=False,
            	include_tailing_empty_rows=False,
-            numerize=True)
+            numerize=True,
+            value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
         
     def refresh_google_sheets_dataframe(self):
@@ -41,7 +42,8 @@ class sheets_data_manager:
             has_header=True,
          	include_tailing_empty=False,
          	include_tailing_empty_rows=False,
-            numerize=True)
+            numerize=True,
+            value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
 
     
@@ -130,7 +132,77 @@ class sheets_data_manager:
         total_points_series = (total_charge_points_series.add(
             total_grid_points_series, fill_value=0)).add(mobility_points_series, fill_value=0)
         total_points_series.rename('Total Points', inplace=True)
+        
+        auto_cones_count_series = (
+            (team_scouting_results['Auto Cones Top']) +
+            (team_scouting_results['Auto Cones Mid']) +
+            (team_scouting_results['Auto Cones Low']))
+        auto_cones_count_series.rename('Auto Cones', inplace=True)
 
+
+        auto_cubes_count_series = (
+            (team_scouting_results['Auto Cubes Top']) +
+            (team_scouting_results['Auto Cubes Mid']) +
+            (team_scouting_results['Auto Cubes Low']))
+        auto_cubes_count_series.rename('Auto Cubes', inplace=True)
+
+        auto_pieces_count_series = auto_cones_count_series.add(auto_cubes_count_series)
+        auto_pieces_count_series.rename('Auto Pieces', inplace=True)
+
+        tele_cones_count_series = (
+            (team_scouting_results['Tele Cones Top']) +
+            (team_scouting_results['Tele Cones Mid']) +
+            (team_scouting_results['Tele Cones Low']))
+        tele_cones_count_series.rename('Tele Cones', inplace=True)
+        
+        tele_cubes_count_series = (
+            (team_scouting_results['Tele Cubes Top']) +
+            (team_scouting_results['Tele Cubes Mid']) +
+            (team_scouting_results['Tele Cubes Low']))
+        tele_cubes_count_series.rename('Tele Cubes', inplace=True)
+        
+        tele_pieces_count_series = tele_cones_count_series.add(tele_cubes_count_series)
+        tele_pieces_count_series.rename('Tele Pieces', inplace=True)
+
+        total_cubes_count_series = tele_cubes_count_series.add(auto_cubes_count_series)
+        total_cubes_count_series.rename('Total Cubes', inplace=True)
+        
+        total_cones_count_series = tele_cones_count_series.add(auto_cones_count_series)
+        total_cones_count_series.rename('Total Cones', inplace=True)
+        
+        total_pieces_count_series = tele_pieces_count_series.add(auto_pieces_count_series)
+        total_pieces_count_series.rename('Total Pieces', inplace=True)
+        
+        top_cubes_series = (
+             (team_scouting_results['Auto Cubes Top']) +
+             (team_scouting_results['Tele Cubes Top']))
+        top_cubes_series.rename('Top Cubes', inplace=True)
+        
+        top_cones_series = (
+             (team_scouting_results['Auto Cones Top']) +
+             (team_scouting_results['Tele Cones Top']))
+        top_cones_series.rename('Top Cones', inplace=True)
+        
+        mid_cubes_series = (
+             (team_scouting_results['Auto Cubes Mid']) +
+             (team_scouting_results['Tele Cubes Mid']))
+        mid_cubes_series.rename('Mid Cubes', inplace=True)
+        
+        mid_cones_series = (
+             (team_scouting_results['Auto Cones Mid']) +
+             (team_scouting_results['Tele Cones Mid']))
+        mid_cones_series.rename('Mid Cones', inplace=True)
+        
+        low_cubes_series = (
+             (team_scouting_results['Auto Cubes Low']) +
+             (team_scouting_results['Tele Cubes Low']))
+        low_cubes_series.rename('Low Cubes', inplace=True)
+        
+        low_cones_series = (
+             (team_scouting_results['Auto Cones Low']) +
+             (team_scouting_results['Tele Cones Low']))
+        low_cones_series.rename('Low Cones', inplace=True)
+        
         analysis_df = pd.concat([partial_df, 
                         auto_grid_points_series, 
                         tele_grid_points_series, 
@@ -139,7 +211,23 @@ class sheets_data_manager:
                         mobility_points_series,
                         total_grid_points_series,
                         total_charge_points_series,
-                        total_points_series], axis=1)
+                        total_points_series,
+                        top_cubes_series,
+                        top_cones_series,
+                        mid_cones_series,
+                        mid_cubes_series,
+                        low_cubes_series,
+                        low_cones_series,
+                        auto_cones_count_series,
+                        auto_cubes_count_series,
+                        auto_pieces_count_series,
+                        tele_cones_count_series,
+                        tele_cubes_count_series,
+                        tele_pieces_count_series,
+                        total_cones_count_series,
+                        total_cubes_count_series,
+                        total_pieces_count_series
+                        ], axis=1)
         
         # print(analysis_df)
         
