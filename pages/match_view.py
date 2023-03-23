@@ -1,6 +1,7 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
+from enum import auto
 import pandas as pd
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
@@ -122,7 +123,17 @@ def update_profile(select_match, session_analysis_database):
     px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[5], px.colors.qualitative.Plotly[
         5], px.colors.qualitative.Plotly[1], px.colors.qualitative.Plotly[1]
     
+    green = px.colors.qualitative.Plotly[2]
+    purple = px.colors.qualitative.Plotly[0]
+    blue = px.colors.qualitative.Plotly[5]
+    red = px.colors.qualitative.Plotly[1]
+    yellow = 'gold'
+    
+    
     points = []
+    tele_pieces_aggregate = []
+    auto_pieces_aggregate = []
+    
     piece_pie = []
     avg_points_bar = []
     blue_bar_points_charge = []
@@ -156,13 +167,28 @@ def update_profile(select_match, session_analysis_database):
             red_bar_points_charge.append(avg_charge_points)
             red_bar_points_grid.append(avg_grid_points)
         
-        non_zero_low_points = total_points[total_points != 0].min()
+        non_zero_min_points = total_points[total_points != 0].min()
         avg_points = total_points.mean()
         high_points = total_points.max()
         
-        avgs = [round(non_zero_low_points, 2), round(avg_points, 2), round(high_points, 2)]
+        tele_pieces = team_stats['Tele Pieces'] 
+        non_zero_min_tele_pieces = tele_pieces[tele_pieces != 0].min()
+        avg_tele_pieces = tele_pieces.mean()
+        max_tele_pieces = tele_pieces.max()
+        
+        auto_pieces = team_stats['Auto Pieces'] 
+        non_zero_min_auto_pieces = auto_pieces[auto_pieces != 0].min()
+        avg_auto_pieces = auto_pieces.mean()
+        max_auto_pieces = auto_pieces.max()
+        
+        tele_pieces_list = [round(non_zero_min_tele_pieces, 2), round(avg_tele_pieces, 2), round(max_tele_pieces, 2)]
+        auto_pieces_list = [round(non_zero_min_auto_pieces, 2), round(avg_auto_pieces, 2), round(max_auto_pieces, 2)]
+        
+        avgs = [round(non_zero_min_points, 2), round(avg_points, 2), round(high_points, 2)]
         
         points.append([html.Div(i, className='text-center bg-light text-dark border border-1 py-2 d-inline-flex justify-content-center flex-grow-1 fs-6') for i in avgs])
+        tele_pieces_aggregate.append([html.Div(i, className='text-center bg-light text-dark border border-1 py-2 d-inline-flex justify-content-center flex-grow-1 fs-6') for i in tele_pieces_list])
+        auto_pieces_aggregate.append([html.Div(i, className='text-center bg-light text-dark border border-1 py-2 d-inline-flex justify-content-center flex-grow-1 fs-6') for i in auto_pieces_list])
         # points.append(round(avg_points, 2))
         # points.append(round(high_points, 2))
         
@@ -283,12 +309,36 @@ def update_profile(select_match, session_analysis_database):
     [dbc.Col(html.B(html.Div(i, className=red_className))) for i in red_teams])
     
     # print(charts)
+    min_avg_max_label = dbc.Row(dbc.Col(html.Div('Total Points (Nonzero Min, Avg, Max)',
+                                className='text-center text-black bg-light border border-3 py-1 fs-5')))
+    
     filler = [dbc.Row([dbc.Col(i, width=2, id='min_avg_max', className='border border-3') for i in points])]
     
+    pie_chart_label = dbc.Row(dbc.Col(html.P([
+        html.Span('Cones', style={'color': yellow}, id='color_word'),
+        html.Span(' v '),
+        html.Span('Cubes', style={'color': purple}, id='color_word'),
+        html.Span(' - '),
+        html.Span('Low', style={'color': red}, id='color_word'),
+        html.Span(' v '),
+        html.Span('Mid', style={'color': blue}, id='color_word'),
+        html.Span(' v '),
+        html.Span('High', style={'color': green}, id='color_word')], className='text-center text-black bg-light mb-0 border border-3 py-1 fs-5')))
+    
     filler1 = [dbc.Row([dbc.Col(dcc.Graph(figure=i, id='pie_pieces', className='text-center bg-light border border-3'), width=2) for i in piece_pie])]
+    
+    tele_pieces_label = dbc.Row(dbc.Col(html.Div('Teleop Pieces (Nonzero Min, Avg, Max)',
+                                className='text-center text-black bg-light border border-3 py-1 fs-5')))
+    
+    filler0 = [dbc.Row([dbc.Col(i, width=2, id='tele_pieces', className='border border-3') for i in tele_pieces_aggregate])]
+    
+    auto_pieces_label = dbc.Row(dbc.Col(html.Div('Auto Pieces (Nonzero Min, Avg, Max)',
+                                className='text-center text-black bg-light border border-3 py-1 fs-5')))
+    
+    auto_pieces = [dbc.Row([dbc.Col(i, width=2, id='auto_pieces', className='border border-3') for i in auto_pieces_aggregate])]
              
     filler2 = [dbc.Row([dbc.Col(dcc.Graph(figure=i, id='bar_points_contribution', className='text-center bg-light border border-3'), width=6) for i in bar])] 
 
     filler3 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(1, 3)])] 
 
-    return [[teams_layout] + filler + filler1 + filler2 + filler3]
+    return [[teams_layout] + [min_avg_max_label] + filler + [pie_chart_label] + filler1 + [tele_pieces_label] + filler0 + [auto_pieces_label] + auto_pieces + filler2 + filler3]

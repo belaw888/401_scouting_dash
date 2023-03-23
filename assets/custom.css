@@ -29,6 +29,15 @@ body {
 	display: block;
 }
 
+#color_word {
+	text-shadow:
+			-1px -1px 0 #000,
+			1px -1px 0 #000,
+			-1px 1px 0 #000,
+			1px 1px 0 #000;
+}
+
+
 #pie_pieces {
 	justify-content: center;
 	aspect-ratio: 1/1;
@@ -50,7 +59,7 @@ body {
 	margin-left: 0px;
 }
 
-#min_avg_max {
+#min_avg_max, #tele_pieces, #auto_pieces {
 	display: flex;
 }
 
