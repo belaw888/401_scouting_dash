@@ -6,8 +6,8 @@ import pandas as pd
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
 import dash
-from dash import Dash, dcc, html, callback, dash_table, Input, Output  # pip install dash (version 2.0.0 or higher)
-from plotly.subplots import make_subplots
+from dash import Dash, dcc, html, callback, dash_table, Input, Output
+from dash.dash_table.Format import Format, Group
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 import numpy
 from soupsieve import select
@@ -92,6 +92,19 @@ layout = dbc.Container([
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
     ),
+    
+    dbc.Row(
+        dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
+                 html.Div(html.I(html.B('Game Piece Type')),
+                          className='d-flex justify-content-center py-4 px-2',
+                          style={"color": "#2a3f5f", "font-size": 20,
+                                 'font-family': 'Open Sans'}),
+
+                 piece_type_graph:= dcc.Graph(figure={}, config=config),
+                 html.Br()])],
+                xs=12, sm=12, md=12, lg=12, xl=12,
+                )
+    ),
 
     
     html.Br(),
@@ -107,7 +120,39 @@ layout = dbc.Container([
                  html.Br()])],
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
-    )
+    ),
+    html.Br(),
+    dbc.Row(
+        dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
+                 html.Div(html.I(html.B('Charging Station Results')),
+                          className='d-flex justify-content-center py-4 px-2',
+                          style={"color": "#2a3f5f", "font-size": 20,
+                                 'font-family': 'Open Sans'}),
+
+                 auto_charge_table := dash_table.DataTable(
+                     style_data={
+                         'color': 'black',
+                         'backgroundColor': 'white'
+                     },
+                     style_header={
+                         'backgroundColor': 'rgb(30, 30, 30)',
+                         'color': 'white'
+                     },
+                     style_table={
+                         'overflowX': 'auto',
+                         'minWidth': '100%'
+                     },
+                     style_cell={'fontSize': 18,
+                                 'font-family': 'DejaVu Sans',
+                                 'font-weight': 700},),
+
+                    #  fixed_columns={'headers': True, 'data': 1},),
+                 html.Br()])],
+                xs=12, sm=12, md=12, lg=12, xl=12,
+                )
+    ),
+    html.Br(),
+
     
 ])
 
@@ -118,14 +163,18 @@ layout = dbc.Container([
         Output(auto_grid_graph, 'figure'),
         Output(tele_grid_graph, 'figure'),
         Output(piece_pie_graph, 'figure'),
+        Output(piece_type_graph, 'figure'),
+        Output(auto_charge_table, 'data'),
+        Output(auto_charge_table, 'columns'),
     ],
     [
     	Input(select_team, component_property='value'),
-        Input('session_database', 'data')
+        Input('session_database', 'data'),
+        Input('session_analysis_database', 'data')
     ]
 )
 
-def update_profile(select_team, session_database):
+def update_profile(select_team, session_database, session_analysis_database):
     profile_dict = tba.team_profile(select_team)
     nickname = profile_dict.get('nickname')
 
@@ -134,6 +183,12 @@ def update_profile(select_team, session_database):
 
     scouting_results = sheets.parse_json(session_database)
     team_scouting_results = sheets.get_team_data_static(scouting_results, select_team)
+    
+    scouting_analysis_results = sheets.parse_json(session_analysis_database)
+
+    analysis = scouting_analysis_results.copy()
+    team_filter = analysis['Team Number'] == select_team
+    analysis = analysis.loc[team_filter]
     # filter = team_scouting_results['data_id'].value_counts()
     # print(team_scouting_results['data_id'])
     # print(filter)
@@ -143,6 +198,102 @@ def update_profile(select_team, session_database):
     team_scouting_results.drop_duplicates(inplace=True, subset=['data_id'])
     
     x = team_scouting_results['Match Number']
+    tele_grid_graph
+    #######################
+    
+    
+    cubes_scored = analysis['Total Cubes']
+    cube_trace = go.Bar(
+        x=x,
+        y=cubes_scored,
+        name='Cubes Scored',
+        text=cubes_scored,
+        textposition='inside',
+      		hovertemplate="Cubes: %{y}" +
+      		"<extra></extra>",
+      		marker_color='purple')    
+    
+    cones_scored = analysis['Total Cones']
+
+    cone_trace = go.Bar(
+        x=x,
+        y=cones_scored,
+        name='Cones Scored',
+        text=cones_scored,
+        textfont=dict(color='black'),
+        textposition='inside',
+      		hovertemplate="Cones: %{y}" +
+      		"<extra></extra>",
+      		marker_color='goldenrod')
+    
+    piece_type_data = [cube_trace, cone_trace]
+
+    piece_type_layout = go.Layout(
+        barmode='stack', 
+        # title={
+        # 'text': '<b>Game Pieces Scored - Auto</b>',
+        # 'y': 0.95,
+        # 'x': 0.5,
+        # 'xanchor': 'center',
+        # 'yanchor': 'top'}
+        )
+        
+    piece_type_fig = go.Figure(
+        data=piece_type_data,
+        layout=piece_type_layout)
+    
+    piece_type_fig.update_yaxes(automargin='top')
+
+    
+    piece_type_fig.update_yaxes(
+        range=[0, 10],
+        title_text="<b>Number of Game Pieces</b>")
+
+    piece_type_fig.update_xaxes(
+        type='category',
+        title_text="<b>Match Number</b>")
+    
+    piece_type_fig.update_layout(
+        margin=dict(
+            l=75,
+            r=55,
+            b=75,
+            t=50,
+            pad=2),
+        
+        legend=dict(
+        # entrywidthmode='fraction',
+        entrywidth=150,
+        orientation='h',
+        yanchor="bottom",
+        y=1.05,
+        xanchor="right",
+        x=1
+    ))
+    
+    bold_type_items = []
+    for item in analysis["Total Pieces"].tolist():
+        bold_type_items.append('<b>' + str(item) + '</b>')
+
+    
+    piece_type_fig.add_trace(go.Scatter(
+        x=x,
+        y=analysis["Total Pieces"],
+        text=bold_type_items,
+        mode='text',
+        textposition='top center',
+        textfont=dict(
+            size=15,
+        ),
+        hovertemplate=None,
+        hoverinfo='skip',
+        showlegend=False
+    ))
+    
+    
+    
+    
+    ########################
     
     auto_top_scored = team_scouting_results['Auto Cones Top'] + team_scouting_results['Auto Cubes Top']
     
@@ -154,7 +305,7 @@ def update_profile(select_team, session_database):
         textposition='inside',
       		hovertemplate="Top: %{y}" +
       		"<extra></extra>",
-      		marker_color='deepskyblue')
+      		marker_color='lightseagreen')
     
     auto_mid_scored = team_scouting_results['Auto Cones Mid'] + team_scouting_results['Auto Cubes Mid']
     
@@ -168,7 +319,7 @@ def update_profile(select_team, session_database):
         textposition='inside',
       		hovertemplate="Mid: %{y}" +
       		"<extra></extra>",
-      		marker_color='crimson')
+      		marker_color='deepskyblue')
     
     auto_low_scored = team_scouting_results['Auto Cones Low'] + team_scouting_results['Auto Cubes Low']
 
@@ -180,7 +331,7 @@ def update_profile(select_team, session_database):
         textposition='inside',
       		hovertemplate="Low: %{y}" +
       		"<extra></extra>",
-      		marker_color='lightseagreen')
+      		marker_color='crimson')
     
     auto_mean_trace = go.Scatter(
             x=x,
@@ -275,7 +426,7 @@ def update_profile(select_team, session_database):
         textposition='inside',
       		hovertemplate="Top: %{y}" +
       		"<extra></extra>",
-      		marker_color='deepskyblue')
+      		marker_color='lightseagreen')
 
     tele_mid_scored = team_scouting_results['Tele Cones Mid'] + team_scouting_results['Tele Cubes Mid']
 
@@ -288,7 +439,7 @@ def update_profile(select_team, session_database):
         textposition='inside',
       		hovertemplate="Mid: %{y}" +
       		"<extra></extra>",
-      		marker_color='crimson')
+      		marker_color='deepskyblue')
 
     tele_low_scored = team_scouting_results['Tele Cones Low'] + team_scouting_results['Tele Cubes Low']
 
@@ -300,7 +451,7 @@ def update_profile(select_team, session_database):
         textposition='inside',
       		hovertemplate="Low: %{y}" +
       		"<extra></extra>",
-      		marker_color='lightseagreen')
+      		marker_color='crimson')
 
     tele_mean_trace = go.Scatter(
         x=x,
@@ -316,6 +467,8 @@ def update_profile(select_team, session_database):
         "<extra></extra>",
         legendrank=4
     )
+    
+    
 
     tele_grid_data = [tele_low_trace, tele_mid_trace,
                       tele_top_trace, tele_mean_trace]
@@ -382,7 +535,36 @@ def update_profile(select_team, session_database):
         showlegend=False
     ))
     
+    filt = team_scouting_results['Robot Defended?'] == True
+    team_scouting_results.loc[filt]
+    # print(team_scouting_results['Robot Defended?'])
+    # print(team_scouting_results.loc[filt])
+        
+    tele_grid_fig.add_trace(go.Scatter(
+        x=team_scouting_results.loc[filt]['Match Number'],
+        y=tele_total_scored[filt] + 1,
+        # text='*',
+        name='Was Defended',
+        mode='markers',
+        textposition='top center',
+        marker=dict(size=12, color='red'),
+        marker_symbol='diamond',
+        hovertemplate=None,
+        hoverinfo='skip',
+        showlegend=True
+    ))
     
+    
+    ##########################
+    # aggregate_list = team_scouting_results[team_scouting_results['Auto Charge'], team_scouting_results['End Charge']]
+    
+    # charge_table_df = pd.DataFrame(aggregate_list,
+    #                          columns=['Auto Charge', 'End Charge'],
+    #                          index=['Team #'])
+    # print(team_scouting_results[['Team Number','Auto Charge', 'End Charge']])
+    data = team_scouting_results[['Match Number','Auto Charge', 'End Charge']].to_dict('records')
+    columns = [{"name": i, "id": i} for i in team_scouting_results[['Match Number','Auto Charge', 'End Charge']].columns]
+    # print(data)
     ##########################
     
     cones_count_series = (
@@ -416,7 +598,7 @@ def update_profile(select_team, session_database):
             x=0.5
         ))
     
-    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, pieces_pie_chart]
+    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, pieces_pie_chart, data, columns]
 
 
 

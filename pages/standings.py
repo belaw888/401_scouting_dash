@@ -224,7 +224,8 @@ layout = dbc.Container([
                          searchable=False,
                          className='mb-4 text-primary d-flex justify-content-around"')),
     html.Br(),
-    dbc.Row(auto_charge_bubble := dcc.Graph(figure={}))
+    dbc.Row(auto_charge_bubble := dcc.Graph(figure={})),
+    dbc.Row(end_charge_bubble := dcc.Graph(figure={})),
     # df.to_dict('records'), [
     #     {"name": i, "id": i} for i in df.columns], id='tbl',
     
@@ -236,7 +237,8 @@ layout = dbc.Container([
      Output(table, 'columns'),
      Output(table, 'style_data_conditional'),
      Output(legend, 'children'),
-     Output(auto_charge_bubble, 'figure')],
+     Output(auto_charge_bubble, 'figure'),
+     Output(end_charge_bubble, 'figure')],
     
     [Input('session_database', 'data'),
      Input('session_analysis_database', 'data'),
@@ -329,10 +331,10 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
                                                       columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]], [columns_list[4]], [columns_list[5]], [columns_list[6]]],
                                                       colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
     
-    new_df.fillna("N/A", inplace=True)
+    df_for_dict = new_df.fillna("N/A")
     
-    data = new_df.to_dict('records')
-    columns = [{"name": i, "id": i} for i in new_df.columns]
+    data = df_for_dict.to_dict('records')
+    columns = [{"name": i, "id": i} for i in df_for_dict.columns]
     
     team_num_width = {
             'if': {'column_id': 'Team #'},
@@ -349,14 +351,39 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
     
     styles.append(sorted_cell_border)
     styles.append(team_num_width)
+    # print(new_df['Auto Charge Points'][0])
+    
+    auto_scatter_df = new_df.sort_values(by=['Auto Charge Points'], na_position='last')
+    end_scatter_df = new_df.sort_values(by=['Endgame Charge Points'], na_position='last')
 
-    scatter = go.Figure(data=go.Scatter(
-        x=new_df['Auto Charge Points'], y=new_df['Auto Charge Attempts'], mode='markers', text=new_df["Team #"], marker=dict(size=20)))
+    auto_scatter = go.Figure(data=go.Scatter(
+        x=auto_scatter_df['Auto Charge Points'], y=auto_scatter_df['Auto Charge Attempts'], mode='markers+text', text=auto_scatter_df["Team #"], marker=dict(size=10)))
+    auto_scatter.update_layout(title_text="<b>Avg Auto Charge Points vs. # of Attempts</b>")
+    auto_scatter.update_xaxes(title_text="Avg Auto Charge Points")
+    auto_scatter.update_yaxes(title_text="# of Attempts")
+    
+    end_scatter = go.Figure(data=go.Scatter(
+        x=end_scatter_df['Endgame Charge Points'], y=end_scatter_df['Endgame Charge Attempts'], mode='markers+text', text=end_scatter_df["Team #"], marker=dict(size=10)))
+    end_scatter.update_layout(title_text="<b>Avg Endgame Charge Points vs. # of Attempts</b>")
+    end_scatter.update_xaxes(title_text="Avg Endgame Charge Points")
+    end_scatter.update_yaxes(title_text="# of Attempts")
+    
     # print(styles[0])
-    scatter.update_traces(textposition="bottom right")
+    # scatter.update_traces(textposition="bottom right")
+
+    def improve_text_position(x):
+        """ it is more efficient if the x values are sorted """
+        positions = ['top left', 'top center', 'top right', 'middle left',
+                      'middle right', 'bottom left', 
+                     'bottom center', 'bottom right']
+        return [positions[i % len(positions)] for i in range(len(x))]
+
+    auto_scatter.update_traces(textposition=improve_text_position(auto_scatter_df['Auto Charge Points']))
+    end_scatter.update_traces(textposition=improve_text_position(end_scatter_df['Endgame Charge Points']))
+    
     
     # print(legend)
-    return [data, columns, styles, legend, scatter]
+    return [data, columns, styles, legend, auto_scatter, end_scatter]
 
 # def show_div(data):
 #     dict = json.loads(data)
