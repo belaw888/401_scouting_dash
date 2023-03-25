@@ -25,7 +25,7 @@ sheets_data = sheets.get_google_sheets_dataframe()
 teams_list = sheets.get_team_list()
 
 tba = tbapy.tba_api_requests('tba_api_key.txt')
-event_key = '2023vabla'
+event_key = '2023vagle'
 match_keys = tba.event_match_keys(event_key)
 match_keys = [key.split('_')[1] for key in match_keys]
 sort_match = lambda x: int(x.split('m')[1])
