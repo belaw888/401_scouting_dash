@@ -3,6 +3,8 @@ from dash import Dash, dcc, html, callback, dash_table, Input, Output
 from dash.dash_table.Format import Format, Group
 from numpy import true_divide
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 import utils.sheets_data_manager as manager
 import numpy
@@ -31,8 +33,10 @@ class Points(IntEnum):
 columns_list = ['Total Points',
                 'Auto Grid Points',
                 'Auto Charge Points',
+                'Auto Charge Attempts',
                 'Tele Grid Points',
-                'Endgame Charge Points']
+                'Endgame Charge Points',
+                'Endgame Charge Attempts']
                 # 'Auto Cones Mid',
                 # 'Auto Cones Low',
                 # 'Auto Cubes Top',
@@ -96,11 +100,12 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
         #     ((df_max - df_min) * i) + df_min
         #     for i in bounds
         # ]
-        quartiles = [
+        # print([df_numeric_columns.quantile(i) for i in bounds[1:]])
+        quintiles = [
             round(df_numeric_columns.quantile(i)[0], 2) for i in bounds[1:]
         ]
         
-        print(quartiles)
+        # print(quintiles)
         
         # print(ranges)
         # styles = []
@@ -108,8 +113,8 @@ def discrete_background_color_bins(df, n_bins=5, columns_array=[[]], colorscale_
         # print(type(count))
         
         for i in range(1, len(bounds)):
-            min_bound = quartiles[i - 2]
-            max_bound = quartiles[i - 1]
+            min_bound = quintiles[i - 2]
+            max_bound = quintiles[i - 1]
             backgroundColor = colorlover.scales[str(n_bins)]['seq'][colorscale_names[count]][i - 1]
             color = 'black' #if i > len(bounds) / 2. else 'inherit'
 
@@ -218,7 +223,9 @@ layout = dbc.Container([
                          multi=True,
                          searchable=False,
                          className='mb-4 text-primary d-flex justify-content-around"')),
-    
+    html.Br(),
+    dbc.Row(auto_charge_bubble := dcc.Graph(figure={})),
+    dbc.Row(end_charge_bubble := dcc.Graph(figure={})),
     # df.to_dict('records'), [
     #     {"name": i, "id": i} for i in df.columns], id='tbl',
     
@@ -229,7 +236,9 @@ layout = dbc.Container([
     [Output(table, 'data'), 
      Output(table, 'columns'),
      Output(table, 'style_data_conditional'),
-     Output(legend, 'children')],
+     Output(legend, 'children'),
+     Output(auto_charge_bubble, 'figure'),
+     Output(end_charge_bubble, 'figure')],
     
     [Input('session_database', 'data'),
      Input('session_analysis_database', 'data'),
@@ -263,10 +272,29 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
                     
            if cols == 'Auto Charge Points':
                 mean = analysis[cols].mean()
+                mean = float(mean)
+                # print(type(mean))
+                # print(analysis[cols])
                 if mean is numpy.nan:
                     aggregate_list.append(numpy.nan)
                 else:
                     aggregate_list.append(mean)
+                #should only count attempted ones for avg
+           
+           elif cols == 'Auto Charge Attempts':
+                count = analysis['Auto Charge Points'].count()
+                count = float(count)
+                # print(count)
+                # print(type(count))
+                aggregate_list.append(count)
+                #should only count attempted ones for avg
+           
+           elif cols == 'Endgame Charge Attempts':
+                count = analysis['Endgame Charge Points'].count()
+                count = float(count)
+                # print(count)
+                # print(type(count))
+                aggregate_list.append(count)
                 #should only count attempted ones for avg
                     
            elif cols == 'Endgame Charge Points':
@@ -277,7 +305,7 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
                     aggregate_list.append(mean)
                     
            else:
-                aggregate_list.append(analysis[cols].mean())
+                aggregate_list.append(float(analysis[cols].mean()))
 
         
         team_avgs = pd.DataFrame([aggregate_list],
@@ -300,13 +328,13 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
     # columns = [{"name": i, "id": i} for i in scouting_results.columns]
    
     (styles, legend) = discrete_background_color_bins(new_df, 
-                                                      columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]], [columns_list[4]]],
-                                                      colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
+                                                      columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]], [columns_list[4]], [columns_list[5]], [columns_list[6]]],
+                                                      colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
     
-    new_df.fillna("N/A", inplace=True)
+    df_for_dict = new_df.fillna("N/A")
     
-    data = new_df.to_dict('records')
-    columns = [{"name": i, "id": i} for i in new_df.columns]
+    data = df_for_dict.to_dict('records')
+    columns = [{"name": i, "id": i} for i in df_for_dict.columns]
     
     team_num_width = {
             'if': {'column_id': 'Team #'},
@@ -323,11 +351,39 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
     
     styles.append(sorted_cell_border)
     styles.append(team_num_width)
+    # print(new_df['Auto Charge Points'][0])
+    
+    auto_scatter_df = new_df.sort_values(by=['Auto Charge Points'], na_position='last')
+    end_scatter_df = new_df.sort_values(by=['Endgame Charge Points'], na_position='last')
 
+    auto_scatter = go.Figure(data=go.Scatter(
+        x=auto_scatter_df['Auto Charge Points'], y=auto_scatter_df['Auto Charge Attempts'], mode='markers+text', text=auto_scatter_df["Team #"], marker=dict(size=10)))
+    auto_scatter.update_layout(title_text="<b>Avg Auto Charge Points vs. # of Attempts</b>")
+    auto_scatter.update_xaxes(title_text="Avg Auto Charge Points")
+    auto_scatter.update_yaxes(title_text="# of Attempts")
+    
+    end_scatter = go.Figure(data=go.Scatter(
+        x=end_scatter_df['Endgame Charge Points'], y=end_scatter_df['Endgame Charge Attempts'], mode='markers+text', text=end_scatter_df["Team #"], marker=dict(size=10)))
+    end_scatter.update_layout(title_text="<b>Avg Endgame Charge Points vs. # of Attempts</b>")
+    end_scatter.update_xaxes(title_text="Avg Endgame Charge Points")
+    end_scatter.update_yaxes(title_text="# of Attempts")
+    
     # print(styles[0])
+    # scatter.update_traces(textposition="bottom right")
+
+    def improve_text_position(x):
+        """ it is more efficient if the x values are sorted """
+        positions = ['top left', 'top center', 'top right', 'middle left',
+                      'middle right', 'bottom left', 
+                     'bottom center', 'bottom right']
+        return [positions[i % len(positions)] for i in range(len(x))]
+
+    auto_scatter.update_traces(textposition=improve_text_position(auto_scatter_df['Auto Charge Points']))
+    end_scatter.update_traces(textposition=improve_text_position(end_scatter_df['Endgame Charge Points']))
+    
     
     # print(legend)
-    return [data, columns, styles, legend]
+    return [data, columns, styles, legend, auto_scatter, end_scatter]
 
 # def show_div(data):
 #     dict = json.loads(data)
