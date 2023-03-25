@@ -23,7 +23,6 @@ dash.register_page(__name__,
 
 sheets = manager.sheets_data_manager()
 sheets_data = sheets.get_google_sheets_dataframe()
-teams_list = sheets.get_team_list()
 
 tba = tbapy.tba_api_requests('/etc/secrets/tba_api_key.txt')
 
@@ -36,7 +35,7 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_team := dcc.Dropdown(
-                             options=teams_list,
+                             options=sheets.get_team_list()
                              value=401,
                              id='select_team',
                              persistence=True,
