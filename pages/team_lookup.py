@@ -92,6 +92,8 @@ layout = dbc.Container([
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
     ),
+    html.Br(),
+    html.Br(),
     
     dbc.Row(
         dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
@@ -108,19 +110,20 @@ layout = dbc.Container([
 
     
     html.Br(),
+    html.Br(),
     
-    dbc.Row(
-        dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
-                 html.Div(html.I(html.B('Cone vs Cube')),
-                          className='d-flex justify-content-center py-4 px-2',
-                          style={"color": "#2a3f5f", "font-size": 20,
-                                 'font-family': 'Open Sans'}),
+    # dbc.Row(
+    #     dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
+    #              html.Div(html.I(html.B('Cone vs Cube')),
+    #                       className='d-flex justify-content-center py-4 px-2',
+    #                       style={"color": "#2a3f5f", "font-size": 20,
+    #                              'font-family': 'Open Sans'}),
 
-                 piece_pie_graph := dcc.Graph(figure={}, config=config),
-                 html.Br()])],
-                xs=12, sm=12, md=12, lg=12, xl=12,
-                )
-    ),
+    #              piece_pie_graph := dcc.Graph(figure={}, config=config),
+    #              html.Br()])],
+    #             xs=12, sm=12, md=12, lg=12, xl=12,
+    #             )
+    # ),
     html.Br(),
     dbc.Row(
         dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
@@ -162,7 +165,6 @@ layout = dbc.Container([
         Output(team_location, component_property='children'),
         Output(auto_grid_graph, 'figure'),
         Output(tele_grid_graph, 'figure'),
-        Output(piece_pie_graph, 'figure'),
         Output(piece_type_graph, 'figure'),
         Output(auto_charge_table, 'data'),
         Output(auto_charge_table, 'columns'),
@@ -196,27 +198,28 @@ def update_profile(select_team, session_database, session_analysis_database):
     # print(team_scouting_results)
     
     team_scouting_results.drop_duplicates(inplace=True, subset=['data_id'])
+    analysis.drop_duplicates(inplace=True, subset=['data_id'])
     
     x = team_scouting_results['Match Number']
-    tele_grid_graph
+    # tele_grid_graph
     #######################
     
     
     cubes_scored = analysis['Total Cubes']
     cube_trace = go.Bar(
-        x=x,
+        x=analysis['Match Number'],
         y=cubes_scored,
         name='Cubes Scored',
         text=cubes_scored,
         textposition='inside',
       		hovertemplate="Cubes: %{y}" +
       		"<extra></extra>",
-      		marker_color='purple')    
+      		marker_color=px.colors.qualitative.Plotly[0])
     
     cones_scored = analysis['Total Cones']
 
     cone_trace = go.Bar(
-        x=x,
+        x=analysis['Match Number'],
         y=cones_scored,
         name='Cones Scored',
         text=cones_scored,
@@ -224,7 +227,7 @@ def update_profile(select_team, session_database, session_analysis_database):
         textposition='inside',
       		hovertemplate="Cones: %{y}" +
       		"<extra></extra>",
-      		marker_color='goldenrod')
+      		marker_color='gold')
     
     piece_type_data = [cube_trace, cone_trace]
 
@@ -277,7 +280,7 @@ def update_profile(select_team, session_database, session_analysis_database):
 
     
     piece_type_fig.add_trace(go.Scatter(
-        x=x,
+        x=analysis['Match Number'],
         y=analysis["Total Pieces"],
         text=bold_type_items,
         mode='text',
@@ -567,38 +570,38 @@ def update_profile(select_team, session_database, session_analysis_database):
     # print(data)
     ##########################
     
-    cones_count_series = (
-        ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Tele Cones Top'])) +
-        ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Tele Cones Mid'])) +
-        ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Tele Cones Low'])))
-    cones_count_series.rename('Cones', inplace=True)
+    # cones_count_series = (
+    #     ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Tele Cones Top'])) +
+    #     ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Tele Cones Mid'])) +
+    #     ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Tele Cones Low'])))
+    # cones_count_series.rename('Cones', inplace=True)
     
-    cubes_count_series = (
-        ((team_scouting_results['Auto Cubes Top'] + team_scouting_results['Tele Cubes Top'])) +
-        ((team_scouting_results['Auto Cubes Mid'] + team_scouting_results['Tele Cubes Mid'])) +
-        ((team_scouting_results['Auto Cubes Low'] + team_scouting_results['Tele Cubes Low'])))
-    cubes_count_series.rename('Cubes', inplace=True)
+    # cubes_count_series = (
+    #     ((team_scouting_results['Auto Cubes Top'] + team_scouting_results['Tele Cubes Top'])) +
+    #     ((team_scouting_results['Auto Cubes Mid'] + team_scouting_results['Tele Cubes Mid'])) +
+    #     ((team_scouting_results['Auto Cubes Low'] + team_scouting_results['Tele Cubes Low'])))
+    # cubes_count_series.rename('Cubes', inplace=True)
 
-    team_avgs = pd.DataFrame([{"Cones Scored": cones_count_series.sum(), "Cubes Scored": cubes_count_series.sum()}])
+    # team_avgs = pd.DataFrame([{"Cones Scored": cones_count_series.sum(), "Cubes Scored": cubes_count_series.sum()}])
     
-    colors = ['gold', 'Plotly[3]']
+    # colors = ['gold', 'Plotly[3]']
 
-    pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
-    pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='percent', textfont_size=18,
-                      marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+    # pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
+    # pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='percent', textfont_size=18,
+    #                   marker=dict(colors=colors, line=dict(color='#000000', width=2)))
     
-    pieces_pie_chart.update_layout(
-        legend=dict(
-            # entrywidthmode='fraction',
-            entrywidth=100,
-            orientation='h',
-            yanchor="bottom",
-            y=1.1,
-            xanchor="center",
-            x=0.5
-        ))
+    # pieces_pie_chart.update_layout(
+    #     legend=dict(
+    #         # entrywidthmode='fraction',
+    #         entrywidth=100,
+    #         orientation='h',
+    #         yanchor="bottom",
+    #         y=1.1,
+    #         xanchor="center",
+    #         x=0.5
+    #     ))
     
-    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, pieces_pie_chart, data, columns]
+    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, data, columns]
 
 
 
