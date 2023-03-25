@@ -25,7 +25,7 @@ sheets = manager.sheets_data_manager()
 sheets_data = sheets.get_google_sheets_dataframe()
 teams_list = sheets.get_team_list()
 
-tba = tbapy.tba_api_requests('tba_api_key.txt')
+tba = tbapy.tba_api_requests('/etc/secrets/tba_api_key.txt')
 
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
 config = {'displayModeBar': False}
