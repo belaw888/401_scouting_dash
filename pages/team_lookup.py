@@ -35,7 +35,7 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_team := dcc.Dropdown(
-                             options=sheets.get_team_list()
+                             options=sheets.get_team_list(),
                              value=401,
                              id='select_team',
                              persistence=True,
