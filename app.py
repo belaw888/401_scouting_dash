@@ -53,7 +53,7 @@ app.layout = dbc.Container([
         dbc.Col(html.Img(src='assets/401_logo.png', style={'max-width': '100%', 'max-height': '100%', 'object-fit': 'contain'}, className='d-flex justify-content-left px-0'), 
                 xs=2, sm=3, md=2, lg=3, xl=3, className='d-flex justify-content-left px-0'),
         
-        dbc.Col(html.H1("Scouting Data: CHS Blacksburg", className='mt-1',
+        dbc.Col(html.H1("Scouting Data: CHS Glen Allen", className='mt-1',
                         style={'display': 'table-cell', 'text-align': 'center','align-items': 'center', 'font-family': 'DejaVu Sans', 'font-weight': 'bold', 'font-size': '4.3vw'}),
                 xs=8, sm=6, md=8, lg=6, xl=6, className='d-flex justify-content-center align-item-center'),
         
