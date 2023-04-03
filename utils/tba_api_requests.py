@@ -35,33 +35,33 @@ class tba_api_requests:
         json_data = self.tba.match(match_key)
         data = self.tbapy_to_dict(json_data)
         # print(data)
-        match_code = data['comp_level'] + str(data['match_number'])
+        # match_code = data['comp_level'] + str(data['match_number'])
         
-        df = pd.DataFrame.from_dict(data['score_breakdown'])
+        # df = pd.DataFrame.from_dict(data['score_breakdown'])
         
-        df = df.fillna('NO_DATA')
-        df = df.transpose()
+        # df = df.fillna('NO_DATA')
+        # df = df.transpose()
         
-        column_list = ['totalPoints', 'matchCargoTotal',
-                       'autoPoints', 'autoCargoPoints', 'autoCargoTotal', 'autoTaxiPoints',
-                       'teleopPoints', 'teleopCargoPoints', 'teleopCargoTotal',
-                       'endgamePoints', 'endgameRobot1', 'endgameRobot2', 'endgameRobot3']
+        # column_list = ['totalPoints', 'matchCargoTotal',
+        #                'autoPoints', 'autoCargoPoints', 'autoCargoTotal', 'autoTaxiPoints',
+        #                'teleopPoints', 'teleopCargoPoints', 'teleopCargoTotal',
+        #                'endgamePoints', 'endgameRobot1', 'endgameRobot2', 'endgameRobot3']
         
-        df = df[column_list]
+        # df = df[column_list]
         
-        df['Robot1'] = [int(data['alliances'][x]['team_keys'][0][3:]) for x in df.index]
-        df['Robot2'] = [int(data['alliances'][x]['team_keys'][1][3:]) for x in df.index]
-        df['Robot3'] = [int(data['alliances'][x]['team_keys'][2][3:]) for x in df.index]
+        # df['Robot1'] = [int(data['alliances'][x]['team_keys'][0][3:]) for x in df.index]
+        # df['Robot2'] = [int(data['alliances'][x]['team_keys'][1][3:]) for x in df.index]
+        # df['Robot3'] = [int(data['alliances'][x]['team_keys'][2][3:]) for x in df.index]
         
-        df['match_number'] = data['match_number']
-        df['comp_level'] = data['comp_level']
-        df['alliance_color'] = df.index
+        # df['match_number'] = data['match_number']
+        # df['comp_level'] = data['comp_level']
+        # df['alliance_color'] = df.index
                 
-        df = df.rename(index={
-            'blue' : f'{match_code}_blue',
-            'red': f'{match_code}_red'})
+        # df = df.rename(index={
+        #     'blue' : f'{match_code}_blue',
+        #     'red': f'{match_code}_red'})
 
-        return df
+        return data
     
     def event_aggregate_data(self, event_key):
     
@@ -80,7 +80,8 @@ class tba_api_requests:
         profile = self.tba.team(f"frc{str(number)}", simple=True)
         profile = self.tbapy_to_dict(profile)
         return profile
-        
-# api = tba_api_requests('tba_api_key.txt')
-# profile = api.team_profile(346)
-# print(profile['city'])
+    
+    def event_data(self, event_key):
+        json_data = self.tba.event_matches(event_key)
+        data = self.tbapy_to_dataframe(json_data)
+        return data

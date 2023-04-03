@@ -25,7 +25,7 @@ class sheets_data_manager:
     
     def __init__(self) -> None:
         self.credentials = pygsheets.authorize(
-            service_file='/etc/secrets/team-401-scouting-credentials-2023.json')
+            service_file='/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
         self.google_sheet = self.credentials.open(
             '[401 & 422 Scouting] - VAGLE- 2023 Charged Up Database')
         self.worksheet = self.google_sheet.worksheet('title', '401_raw_data')
@@ -54,6 +54,7 @@ class sheets_data_manager:
         return self.analysis_dataframe
     
     def get_duplicates_series(self, df):
+        
         data_id_value_counts = df.value_counts(subset='data_id')
         duplicates_series = data_id_value_counts[data_id_value_counts > 1]
         ls = duplicates_series.index.tolist()
