@@ -26,9 +26,9 @@ class sheets_data_manager:
     
     def __init__(self) -> None:
         self.credentials = pygsheets.authorize(
-            service_file='/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
+            service_file='/etc/secrets/team-401-scouting-credentials-2023.json')
         self.google_sheet = self.credentials.open(
-            '[401 & 422 Scouting] - VAGLE- 2023 Charged Up Database')
+            '[401 & 422 Scouting] - DCMP - 2023 Charged Up Database')
         self.worksheet = self.google_sheet.worksheet('title', '401_raw_data')
         self.raw_dataframe = self.worksheet.get_as_df(
             has_header=True,
