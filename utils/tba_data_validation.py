@@ -19,20 +19,19 @@ class tba_data_validation:
         
         
     def missing_data(self, sheets_data):
+        
         combined = sheets_data['Match Type'].combine(
         sheets_data['Match Number'], (lambda x1, x2: x1 + str(x2)))
         
-        combined = combined.apply(lambda x: '2023vagle_' + x)
+        combined = combined.apply(lambda x: '2023chcmp_' + x)
         
         sheets_data['tba_key'] = combined
         # print(sheets_data)
         
-        # tba.match_aggregate_data('2023vagle_qm1')
-        # match_key = '2023vagle_qm56'
         
         # # print(sheets_data['tba_key'])
         
-        event_data = tba.event_data('2023vagle')
+        event_data = tba.event_data('2023chcmp')
         # match_keys = event_data['key'].to_dict()
         # alliances = event_data['alliances'].to_dict()
         
@@ -94,13 +93,14 @@ class tba_data_validation:
                             'Red 2': [red2],
                             'Red 3': [red3]}
                     df = pd.DataFrame(data=dict)
-                    print(df)
+                    # print(df)
                     out_df = pd.concat([out_df, df], axis=0,
                                        join='outer', ignore_index=True)
                 # print(out_df)
         
             except:
-                print('invalid key: ' + key)
+                # print('invalid key: ' + key)
+                pass
                 
                 
         return out_df
@@ -132,7 +132,7 @@ class tba_data_validation:
 
         local = self.local_scouting_data
         validation_list = []
-        print(local['tba_api_id'])
+        # print(local['tba_api_id'])
         keys_set = set(local['tba_api_id'].to_list())
         unique_keys = list(keys_set)
 
@@ -204,5 +204,5 @@ val = tba_data_validation()
 # # print(df.loc[0:180])
 sheets = manager.sheets_data_manager()
 df = sheets.get_analysis_dataframe()
-print(val.missing_data(df))
+# print(val.missing_data(df))
 # print(val.get_local_scouting_data())

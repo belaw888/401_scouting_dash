@@ -21,6 +21,7 @@ class Points(IntEnum):
 
 class sheets_data_manager:
     raw_dataframe = pd.DataFrame()
+    raw_dataframe_422 = pd.DataFrame()
     analysis_dataframe = pd.DataFrame()
     
     def __init__(self) -> None:
@@ -37,6 +38,14 @@ class sheets_data_manager:
             value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
         
+        self.worksheet_422 = self.google_sheet.worksheet('title', '422_raw_data')
+        self.raw_dataframe_422 = self.worksheet_422.get_as_df(
+            has_header=True,
+            include_tailing_empty=False,
+            include_tailing_empty_rows=False,
+            numerize=True,
+            value_render='UNFORMATTED_VALUE')
+        
     def refresh_google_sheets_dataframe(self):
         self.raw_dataframe = self.worksheet.get_as_df(
             has_header=True,
@@ -45,7 +54,14 @@ class sheets_data_manager:
             numerize=True,
             value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
-
+        
+        self.worksheet_422 = self.google_sheet.worksheet('title', '422_raw_data')
+        self.raw_dataframe_422 = self.worksheet_422.get_as_df(
+            has_header=True,
+            include_tailing_empty=False,
+            include_tailing_empty_rows=False,
+            numerize=True,
+            value_render='UNFORMATTED_VALUE')
     
     def get_google_sheets_dataframe(self):
         return self.raw_dataframe
@@ -53,11 +69,21 @@ class sheets_data_manager:
     def get_analysis_dataframe(self):
         return self.analysis_dataframe
     
+    def get_422_dataframe(self):
+        return self.raw_dataframe_422
+    
+    def add_to_401_dataframe(self, row) -> None:
+        # print(self.raw_dataframe)
+        self.raw_dataframe.loc[len(self.raw_dataframe.index)] = row
+    
     def get_duplicates_series(self, df):
-        
+        df = df[df['data_id'] != '']
         data_id_value_counts = df.value_counts(subset='data_id')
         duplicates_series = data_id_value_counts[data_id_value_counts > 1]
+        
         ls = duplicates_series.index.tolist()
+        ls = [i for i in ls if i != '']
+        # print(ls)
         teams = [i.split('_')[0] for i in ls]
         matches = [i.split('_')[1] for i in ls]
         duplicates = duplicates_series.values.tolist()
@@ -108,12 +134,12 @@ class sheets_data_manager:
 
 
         auto_charge_points_series = team_scouting_results['Auto Charge'].map(
-            {'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': None, 'Failed': 0})  # we only care about how many times they tried to vs failed right?
+            {'D': Points.AUTO_DOCKED, 'E': Points.AUTO_ENGAGED, 'NA': None, 'F': 0})  # we only care about how many times they tried to vs failed right?
         auto_charge_points_series.rename('Auto Charge Points', inplace=True)
 
 
         tele_charge_points_series = team_scouting_results['End Charge'].map(
-            {'docked': Points.TELE_DOCKED, 'engaged': Points.TELE_ENGAGED, 'NA': None, 'Failed': 0})
+            {'D': Points.TELE_DOCKED, 'E': Points.TELE_ENGAGED, 'NA': None, 'F': 0})
         tele_charge_points_series.rename('Endgame Charge Points', inplace=True)
 
         mobility_points_series = team_scouting_results['Mobility'].map(

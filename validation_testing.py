@@ -9,17 +9,15 @@ sheets_data = sheets.get_analysis_dataframe()
 tba = tbapy.tba_api_requests('tba_api_key.txt')
 
 combined = sheets_data['Match Type'].combine(sheets_data['Match Number'], (lambda x1, x2: x1 + str(x2)))
-combined = combined.apply(lambda x: '2023vagle_' + x)
+combined = combined.apply(lambda x: '2023chcmp_' + x)
 
 sheets_data['tba_key'] = combined
 # print(sheets_data)
 
-# tba.match_aggregate_data('2023vagle_qm1')
-# match_key = '2023vagle_qm56'
 
 # # print(sheets_data['tba_key'])
 
-event_data = tba.event_data('2023vagle')
+event_data = tba.event_data('2023chcmp')
 # match_keys = event_data['key'].to_dict()
 # alliances = event_data['alliances'].to_dict()
 
@@ -79,12 +77,13 @@ for key in sheets_data['tba_key'].unique().tolist():
                     'Red 2': [red2],
                     'Red 3': [red3]}
             df = pd.DataFrame(data=dict)
-            print(df)
+            # print(df)
             out_df = pd.concat([out_df, df], axis=0, join='outer', ignore_index=True)
         # print(out_df)
 	
     except:
-        print('invalid key: ' + key)
+        # print('invalid key: ' + key)
+        pass
      
      
-print(out_df)
+# print(out_df)
