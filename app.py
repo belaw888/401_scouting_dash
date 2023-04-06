@@ -1,6 +1,7 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
+from unittest import result
 import pandas as pd
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
@@ -14,9 +15,12 @@ from soupsieve import select
 import utils.sheets_data_manager as manager
 import utils.tba_api_requests as tbapy
 import dash_bootstrap_components as dbc
+import utils.tba_data_validation
 
 sheets = manager.sheets_data_manager()
 sheets_data = sheets.get_google_sheets_dataframe()
+validate = utils.tba_data_validation.tba_data_validation()
+
 
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, dbc.icons.FONT_AWESOME],
            meta_tags=[{'name': 'viewport',
@@ -45,6 +49,7 @@ app.layout = dbc.Container([
     
     dcc.Store(id='session_database', storage_type='session'),
     dcc.Store(id='session_analysis_database', storage_type='session'),
+    dcc.Store(id='session_database_422', storage_type='session'),
     
     
     dbc.Row([
@@ -84,16 +89,73 @@ app.layout = dbc.Container([
 
 @app.callback(
    [Output('session_database', 'data'),
-    Output('session_analysis_database', 'data')],
+    Output('session_analysis_database', 'data'),
+    Output('session_database_422', 'data')],
     Input(update_button, 'n_clicks')
 )
 
 def update_session_data(n_clicks):
     sheets.refresh_google_sheets_dataframe()
-    raw_json_string = sheets.get_as_json(sheets.get_google_sheets_dataframe())
-    analysis_json_string = sheets.get_as_json(sheets.get_analysis_dataframe())
     
-    return [raw_json_string, analysis_json_string]
+    results_422 = sheets.get_422_dataframe()
+    scouting_results = sheets.get_google_sheets_dataframe()
+    analysis = sheets.get_analysis_dataframe()
+    
+    df = sheets.get_duplicates_series(scouting_results)
+    # columns = [{"name": i, "id": i} for i in df.columns]
+    # print(df)
+    df = df.to_dict('records')
+
+    # analysis_results = sheets.parse_json(analysis)
+
+    missing_data = validate.missing_data(analysis)
+    # other_columns = [{"name": i, "id": i} for i in missing_data]
+    # print(missing_data.shape)
+
+    missing = missing_data.apply(lambda x: x.values.flatten().tolist(), axis=1)
+    # print(missing)
+    # row_list = missing_data.loc[2, :].values.flatten().tolist()
+    # print(missing.tolist())
+    # print(len(missing.tolist()))
+
+    # results_422 = sheets.parse_json(database_422)
+    combined = results_422['Match Type'].combine(
+        results_422['Match Number'], (lambda x1, x2: x1 + str(x2)))
+
+    results_422['match_key'] = combined
+
+    # results_422.set_index('match_key', inplace=True)
+    # print(results_422)
+    # print(missing.tolist())
+
+    for row in missing.tolist():
+        # print('yes')
+        match = row[0]
+        # print(match)
+        team_list = [i for i in row if isinstance(i, int)]
+        # print(team_list)
+        filt = results_422['match_key'] == match
+
+        # print(filt)
+        match_filtered = results_422.loc[filt]
+        # print(match_filtered)
+
+        for team in team_list:
+            data_point = match_filtered[match_filtered['Team Number'] == team]
+            data_point.drop(['match_key'], inplace=True, axis=1)
+
+            if not data_point.empty:
+                # print(data_point.values.tolist()[0])
+                sheets.add_to_401_dataframe(data_point.values.tolist()[0])
+
+    scouting_results = sheets.get_google_sheets_dataframe()
+    analysis = sheets.update_analysis_dataframe(scouting_results)
+    
+    raw_json_string_422 = sheets.get_as_json(results_422)
+    raw_json_string = sheets.get_as_json(scouting_results)
+    analysis_json_string = sheets.get_as_json(analysis)
+    
+    return [raw_json_string, analysis_json_string, raw_json_string_422]
 
 # @app.callback(
 #     Output('test', 'children'),

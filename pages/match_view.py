@@ -25,21 +25,25 @@ sheets_data = sheets.get_google_sheets_dataframe()
 teams_list = sheets.get_team_list()
 
 tba = tbapy.tba_api_requests('tba_api_key.txt')
-event_key = '2023vagle'
-match_keys = tba.event_match_keys(event_key)
-match_keys = [key.split('_')[1] for key in match_keys]
-sort_match = lambda x: int(x.split('m')[1])
-qm = [key for key in match_keys if key[0:2] == 'qm']
-qm.sort(key=sort_match)
-sf = [key for key in match_keys if key[0:2] == 'sf']
-sf.sort(key=lambda x: int(x.split('f')[1].split('m')[0]))
-f  = [key for key in match_keys if key[0:1] == 'f']
-f.sort(key=sort_match)
+event_key = '2023chcmp'
+
+def update_matches():
+    match_keys = tba.event_match_keys(event_key)
+    match_keys = [key.split('_')[1] for key in match_keys]
+    sort_match = lambda x: int(x.split('m')[1])
+    qm = [key for key in match_keys if key[0:2] == 'qm']
+    qm.sort(key=sort_match)
+    sf = [key for key in match_keys if key[0:2] == 'sf']
+    sf.sort(key=lambda x: int(x.split('f')[1].split('m')[0]))
+    f  = [key for key in match_keys if key[0:1] == 'f']
+    f.sort(key=sort_match)
+    sorted_matches = qm + sf + f
+    return sorted_matches
+    
 # sf = 
 # f = 
 # match_nums = [int(key.split('m')[1]) for key in match_keys]
 # match_keys.sort(key=lambda x: int(x.split('m')[1]) if 'f' not in x else max(match_nums) + int(x.split('f')[1].split('m')[0]))
-sorted_matches = qm + sf + f
 # print(sorted_matches[0])
 
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
@@ -51,8 +55,8 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_match := dcc.Dropdown(
-                options=sorted_matches,
-                value=sorted_matches[0],
+                options=update_matches(),
+                value=update_matches()[0],
                 id='select_match',
                 persistence=True,
                 multi=False,

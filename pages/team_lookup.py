@@ -23,12 +23,11 @@ dash.register_page(__name__,
 
 sheets = manager.sheets_data_manager()
 sheets_data = sheets.get_google_sheets_dataframe()
-sheets_list = sheets.get_team_list()
+# teams_list = sheets.get_team_list()
 
-tba = tbapy.tba_api_requests('/etc/secrets/tba_api_key.txt')
+tba = tbapy.tba_api_requests('tba_api_key.txt')
 
-columns = [{'name': i, 'id': i} for i in sheets_data.columns]
-config = {'displayModeBar': False}
+# config = {'displayModeBar': True}
 
 # print(columns)
 
@@ -36,7 +35,7 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_team := dcc.Dropdown(
-                             options=sheets_list,
+                             options=sheets.get_team_list(),
                              value=401,
                              id='select_team',
                              persistence=True,
@@ -44,19 +43,21 @@ layout = dbc.Container([
                              searchable=False,
                              className='mb-4 text-primary d-flex justify-content-around'
                              )
-                ], xs=12, sm=12, md=3, lg=3, xl=3),#width={'size': 3}),
+                ], xs=12, sm=12, md=3, lg=3, xl=3),
         
         dbc.Col([
-            team_name_string := html.H4( children=[],
-                                         className='d-flex justify-content-md-center justify-content-sm-start'
-                    )
-                ], xs=12, sm=12, md=6, lg=6, xl=6),  # width={'size': 6}),
+            team_name_string := html.H4( 
+                children=[],
+                className='d-flex justify-content-md-center justify-content-sm-start'
+                                       )
+                ], xs=12, sm=12, md=6, lg=6, xl=6
+                ),  
         
         dbc.Col([
             team_location := html.H4(children=[],
                                      className='d-flex justify-content-md-end justify-content-sm-start'
                     )
-                ], xs=12, sm=12, md=3, lg=3, xl=3),  # width={'size': 3})
+                ], xs=12, sm=12, md=3, lg=3, xl=3),  
     ], className="d-flex justify-content-between"),
     
     html.Br(),
@@ -71,7 +72,7 @@ layout = dbc.Container([
                           style={"color": "#2a3f5f", "font-size": 20,
                 'font-family': 'Open Sans'}),
                 
-            auto_grid_graph := dcc.Graph(figure={}, config=config),
+            auto_grid_graph := dcc.Graph(figure={}),
             html.Br()])],
                                          xs=12, sm=12, md=12, lg=12, xl=12,
             )
@@ -87,7 +88,7 @@ layout = dbc.Container([
                           style={"color": "#2a3f5f", "font-size": 20,
                                  'font-family': 'Open Sans'}),
 
-                 tele_grid_graph := dcc.Graph(figure={}, config=config),
+                 tele_grid_graph := dcc.Graph(figure={}),
                  html.Br()])],
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
@@ -102,7 +103,7 @@ layout = dbc.Container([
                           style={"color": "#2a3f5f", "font-size": 20,
                                  'font-family': 'Open Sans'}),
 
-                 piece_type_graph:= dcc.Graph(figure={}, config=config),
+                 piece_type_graph:= dcc.Graph(figure={}),
                  html.Br()])],
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
@@ -111,20 +112,8 @@ layout = dbc.Container([
     
     html.Br(),
     html.Br(),
-    
-    # dbc.Row(
-    #     dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
-    #              html.Div(html.I(html.B('Cone vs Cube')),
-    #                       className='d-flex justify-content-center py-4 px-2',
-    #                       style={"color": "#2a3f5f", "font-size": 20,
-    #                              'font-family': 'Open Sans'}),
-
-    #              piece_pie_graph := dcc.Graph(figure={}, config=config),
-    #              html.Br()])],
-    #             xs=12, sm=12, md=12, lg=12, xl=12,
-    #             )
-    # ),
     html.Br(),
+    
     dbc.Row(
         dbc.Col([html.Div(style={'background-color': 'white', 'border-radius': '15px'}, children=[
                  html.Div(html.I(html.B('Charging Station Results')),
@@ -149,7 +138,6 @@ layout = dbc.Container([
                                  'font-family': 'DejaVu Sans',
                                  'font-weight': 700},),
 
-                    #  fixed_columns={'headers': True, 'data': 1},),
                  html.Br()])],
                 xs=12, sm=12, md=12, lg=12, xl=12,
                 )
