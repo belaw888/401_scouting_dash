@@ -56,7 +56,7 @@ layout = dbc.Container([
         dbc.Col([
             select_match := dcc.Dropdown(
                 options=update_matches(),
-                value=update_matches()[0],
+                value='qm1',
                 id='select_match',
                 persistence=True,
                 multi=False,
