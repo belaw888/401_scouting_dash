@@ -32,9 +32,11 @@ class Points(IntEnum):
 
 columns_list = ['Total Points',
                 'Auto Grid Points',
+                'Auto Pieces',
                 'Auto Charge Points',
                 'Auto Charge Attempts',
                 'Tele Grid Points',
+                'Tele Pieces',
                 'Endgame Charge Points',
                 'Endgame Charge Attempts']
                 # 'Auto Cones Mid',
