@@ -36,7 +36,7 @@ columns_list = ['Total Points',
                 'Auto Charge Points',
                 'Auto Charge Attempts',
                 'Tele Grid Points',
-                'Tele Pieces'
+                'Tele Pieces',
                 'Endgame Charge Points',
                 'Endgame Charge Attempts']
                 # 'Auto Cones Mid',
@@ -330,8 +330,8 @@ def show_data_table(session_database, session_analysis_database, sort_by, ignore
     # columns = [{"name": i, "id": i} for i in scouting_results.columns]
    
     (styles, legend) = discrete_background_color_bins(new_df, 
-                                                      columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]], [columns_list[4]], [columns_list[5]], [columns_list[6]]],
-                                                      colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
+                                                      columns_array=[[columns_list[0]], [columns_list[1]], [columns_list[2]], [columns_list[3]], [columns_list[4]], [columns_list[5]], [columns_list[6]], [columns_list[7]], [columns_list[8]]],
+                                                      colorscale_names=['Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges', 'Oranges'])
     
     df_for_dict = new_df.fillna("N/A")
     
