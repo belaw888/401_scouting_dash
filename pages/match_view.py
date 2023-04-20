@@ -357,6 +357,7 @@ def update_profile(select_match, session_analysis_database):
     filler3 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(1, 3)])] 
     
     options = update_matches(event_key)
+    print(options)
     # value = update_matches()[0],
 
     
