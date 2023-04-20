@@ -131,7 +131,7 @@ class sheets_data_manager:
         tele_charge_points_series.rename('Endgame Charge Points', inplace=True)
 
         mobility_points_series = team_scouting_results['Mobility'].map(
-            {'TRUE': Points.MOBILITY, '': 0})
+            {'TRUE': Points.MOBILITY, 'FALSE': 0})
         mobility_points_series.rename('Mobility Points', inplace=True)
 
         total_grid_points_series = auto_grid_points_series.add(
