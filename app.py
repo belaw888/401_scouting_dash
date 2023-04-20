@@ -49,7 +49,7 @@ app.layout = dbc.Container([
     
     dcc.Store(id='session_database', storage_type='session'),
     dcc.Store(id='session_analysis_database', storage_type='session'),
-    dcc.Store(id='session_database_422', storage_type='session'),
+    # dcc.Store(id='session_database_422', storage_type='session'),
     
     
     dbc.Row([
@@ -89,15 +89,15 @@ app.layout = dbc.Container([
 
 @app.callback(
    [Output('session_database', 'data'),
-    Output('session_analysis_database', 'data'),
-    Output('session_database_422', 'data')],
+    Output('session_analysis_database', 'data')],
+    # Output('session_database_422', 'data')],
     Input(update_button, 'n_clicks')
 )
 
 def update_session_data(n_clicks):
     sheets.refresh_google_sheets_dataframe()
     
-    results_422 = sheets.get_422_dataframe()
+    # results_422 = sheets.get_422_dataframe()
     scouting_results = sheets.get_google_sheets_dataframe()
     analysis = sheets.get_analysis_dataframe()
     
@@ -119,10 +119,10 @@ def update_session_data(n_clicks):
     # print(len(missing.tolist()))
 
     # results_422 = sheets.parse_json(database_422)
-    combined = results_422['Match Type'].combine(
-        results_422['Match Number'], (lambda x1, x2: x1 + str(x2)))
+    # combined = results_422['Match Type'].combine(
+    #     results_422['Match Number'], (lambda x1, x2: x1 + str(x2)))
 
-    results_422['match_key'] = combined
+    # results_422['match_key'] = combined
 
     # results_422.set_index('match_key', inplace=True)
     # print(results_422)
@@ -134,28 +134,28 @@ def update_session_data(n_clicks):
         # print(match)
         team_list = [i for i in row if isinstance(i, int)]
         # print(team_list)
-        filt = results_422['match_key'] == match
+        # filt = results_422['match_key'] == match
 
-        # print(filt)
-        match_filtered = results_422.loc[filt]
+        # # print(filt)
+        # match_filtered = results_422.loc[filt]
         # print(match_filtered)
 
-        for team in team_list:
-            data_point = match_filtered[match_filtered['Team Number'] == team]
-            data_point.drop(['match_key'], inplace=True, axis=1)
+        # for team in team_list:
+        #     data_point = match_filtered[match_filtered['Team Number'] == team]
+        #     data_point.drop(['match_key'], inplace=True, axis=1)
 
-            if not data_point.empty:
-                # print(data_point.values.tolist()[0])
-                sheets.add_to_401_dataframe(data_point.values.tolist()[0])
+        #     if not data_point.empty:
+        #         # print(data_point.values.tolist()[0])
+        #         sheets.add_to_401_dataframe(data_point.values.tolist()[0])
 
     scouting_results = sheets.get_google_sheets_dataframe()
     analysis = sheets.update_analysis_dataframe(scouting_results)
     
-    raw_json_string_422 = sheets.get_as_json(results_422)
+    # raw_json_string_422 = sheets.get_as_json(results_422)
     raw_json_string = sheets.get_as_json(scouting_results)
     analysis_json_string = sheets.get_as_json(analysis)
     
-    return [raw_json_string, analysis_json_string, raw_json_string_422]
+    return [raw_json_string, analysis_json_string]
 
 # @app.callback(
 #     Output('test', 'children'),

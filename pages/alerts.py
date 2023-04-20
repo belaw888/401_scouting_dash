@@ -69,11 +69,11 @@ layout = dbc.Container([
      Output(missing_table, 'data'),  Output(missing_table, 'columns')],
     [Input('session_database', 'data'),
      Input('session_analysis_database', 'data'),
-     Input('session_database_422', 'data'),
+    #  Input('session_database_422', 'data'),
      ]
 )
 
-def show_data_table(session_database, analysis, database_422):
+def show_data_table(session_database, analysis):
     scouting_results = sheets.parse_json(session_database)
     df = sheets.get_duplicates_series(scouting_results)
     columns = [{"name": i, "id": i} for i in df.columns]

@@ -26,11 +26,13 @@ class sheets_data_manager:
     
     def __init__(self) -> None:
         self.credentials = pygsheets.authorize(
-            service_file=#'/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
-            '/etc/secrets/team-401-scouting-credentials-2023.json')
+            service_file='/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
+            #'/etc/secrets/team-401-scouting-credentials-2023.json')
+        print(self.credentials.drive.list(q="mimeType='application/vnd.google-apps.spreadsheet'",
+                      fields="files(name, parents), nextPageToken, incompleteSearch"))
         self.google_sheet = self.credentials.open(
-            '[401 & 422 Scouting] - DCMP - 2023 Charged Up Database')
-        self.worksheet = self.google_sheet.worksheet('title', '401_raw_data')
+            '[401 & 836 Scouting] - WORLDS - 2023 Charged Up Database')
+        self.worksheet = self.google_sheet.worksheet('title', 'parsed_836')
         self.raw_dataframe = self.worksheet.get_as_df(
             has_header=True,
            	include_tailing_empty=False,
@@ -39,13 +41,7 @@ class sheets_data_manager:
             value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
         
-        self.worksheet_422 = self.google_sheet.worksheet('title', '422_raw_data')
-        self.raw_dataframe_422 = self.worksheet_422.get_as_df(
-            has_header=True,
-            include_tailing_empty=False,
-            include_tailing_empty_rows=False,
-            numerize=True,
-            value_render='UNFORMATTED_VALUE')
+      
         
     def refresh_google_sheets_dataframe(self):
         self.raw_dataframe = self.worksheet.get_as_df(
@@ -56,22 +52,11 @@ class sheets_data_manager:
             value_render='UNFORMATTED_VALUE')
         self.analysis_dataframe = self.update_analysis_dataframe(self.raw_dataframe)
         
-        self.worksheet_422 = self.google_sheet.worksheet('title', '422_raw_data')
-        self.raw_dataframe_422 = self.worksheet_422.get_as_df(
-            has_header=True,
-            include_tailing_empty=False,
-            include_tailing_empty_rows=False,
-            numerize=True,
-            value_render='UNFORMATTED_VALUE')
-    
     def get_google_sheets_dataframe(self):
         return self.raw_dataframe
     
     def get_analysis_dataframe(self):
         return self.analysis_dataframe
-    
-    def get_422_dataframe(self):
-        return self.raw_dataframe_422
     
     def add_to_401_dataframe(self, row) -> None:
         # print(self.raw_dataframe)
@@ -100,6 +85,8 @@ class sheets_data_manager:
         
     def get_team_list(self):
       list = self.raw_dataframe['Team Number'].unique().tolist()
+    #   [print(i) for i in list]
+      list.remove('')
       list.sort()
       return list        
   
@@ -123,14 +110,14 @@ class sheets_data_manager:
         auto_grid_points_series = (
             ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Auto Cubes Top']) * Points.AUTO_TOP) +
             ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Auto Cubes Mid']) * Points.AUTO_MID) +
-            ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Auto Cubes Low']) * Points.AUTO_LOW))
+            ((team_scouting_results['Auto Low']) * Points.AUTO_LOW))
         auto_grid_points_series.rename('Auto Grid Points', inplace=True)
 
         
         tele_grid_points_series = (
             ((team_scouting_results['Tele Cones Top'] + team_scouting_results['Tele Cubes Top']) * Points.TELE_TOP) +
             ((team_scouting_results['Tele Cones Mid'] + team_scouting_results['Tele Cubes Mid']) * Points.TELE_MID) +
-            ((team_scouting_results['Tele Cones Low'] + team_scouting_results['Tele Cubes Low']) * Points.TELE_LOW))
+            ((team_scouting_results['Tele Low']) * Points.TELE_LOW))
         tele_grid_points_series.rename('Tele Grid Points', inplace=True)
 
 
@@ -163,33 +150,34 @@ class sheets_data_manager:
         
         auto_cones_count_series = (
             (team_scouting_results['Auto Cones Top']) +
-            (team_scouting_results['Auto Cones Mid']) +
-            (team_scouting_results['Auto Cones Low']))
+            (team_scouting_results['Auto Cones Mid']))
         auto_cones_count_series.rename('Auto Cones', inplace=True)
-
 
         auto_cubes_count_series = (
             (team_scouting_results['Auto Cubes Top']) +
-            (team_scouting_results['Auto Cubes Mid']) +
-            (team_scouting_results['Auto Cubes Low']))
+            (team_scouting_results['Auto Cubes Mid']))
         auto_cubes_count_series.rename('Auto Cubes', inplace=True)
+        
+        auto_hybrid_count_series = team_scouting_results['Auto Low']
 
         auto_pieces_count_series = auto_cones_count_series.add(auto_cubes_count_series)
+        auto_pieces_count_series = auto_pieces_count_series.add(auto_hybrid_count_series)
         auto_pieces_count_series.rename('Auto Pieces', inplace=True)
 
         tele_cones_count_series = (
             (team_scouting_results['Tele Cones Top']) +
-            (team_scouting_results['Tele Cones Mid']) +
-            (team_scouting_results['Tele Cones Low']))
+            (team_scouting_results['Tele Cones Mid']))
         tele_cones_count_series.rename('Tele Cones', inplace=True)
         
         tele_cubes_count_series = (
             (team_scouting_results['Tele Cubes Top']) +
-            (team_scouting_results['Tele Cubes Mid']) +
-            (team_scouting_results['Tele Cubes Low']))
+            (team_scouting_results['Tele Cubes Mid']))
         tele_cubes_count_series.rename('Tele Cubes', inplace=True)
         
+        tele_hybrid_count_series = team_scouting_results['Tele Low']
+        
         tele_pieces_count_series = tele_cones_count_series.add(tele_cubes_count_series)
+        tele_pieces_count_series = tele_pieces_count_series.add(tele_hybrid_count_series)
         tele_pieces_count_series.rename('Tele Pieces', inplace=True)
 
         total_cubes_count_series = tele_cubes_count_series.add(auto_cubes_count_series)
@@ -221,15 +209,10 @@ class sheets_data_manager:
              (team_scouting_results['Tele Cones Mid']))
         mid_cones_series.rename('Mid Cones', inplace=True)
         
-        low_cubes_series = (
-             (team_scouting_results['Auto Cubes Low']) +
-             (team_scouting_results['Tele Cubes Low']))
-        low_cubes_series.rename('Low Cubes', inplace=True)
-        
-        low_cones_series = (
-             (team_scouting_results['Auto Cones Low']) +
-             (team_scouting_results['Tele Cones Low']))
-        low_cones_series.rename('Low Cones', inplace=True)
+        low_pieces_series = (
+             (team_scouting_results['Auto Low']) +
+             (team_scouting_results['Tele Low']))
+        low_pieces_series.rename('Low Pieces', inplace=True)
         
         analysis_df = pd.concat([partial_df, 
                         auto_grid_points_series, 
@@ -244,8 +227,7 @@ class sheets_data_manager:
                         top_cones_series,
                         mid_cones_series,
                         mid_cubes_series,
-                        low_cubes_series,
-                        low_cones_series,
+                        low_pieces_series,
                         auto_cones_count_series,
                         auto_cubes_count_series,
                         auto_pieces_count_series,

@@ -35,7 +35,6 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_team := dcc.Dropdown(
-                             options=sheets.get_team_list(),
                              value=401,
                              id='select_team',
                              persistence=True,
@@ -156,6 +155,7 @@ layout = dbc.Container([
         Output(piece_type_graph, 'figure'),
         Output(auto_charge_table, 'data'),
         Output(auto_charge_table, 'columns'),
+        Output(select_team, 'options'),
     ],
     [
     	Input(select_team, component_property='value'),
@@ -217,7 +217,20 @@ def update_profile(select_team, session_database, session_analysis_database):
       		"<extra></extra>",
       		marker_color='gold')
     
-    piece_type_data = [cube_trace, cone_trace]
+    hybrid_scored = analysis['Low Pieces']
+
+    hybrid_trace = go.Bar(
+        x=analysis['Match Number'],
+        y=hybrid_scored,
+        name='Hybrid Scored',
+        text=cones_scored,
+        textfont=dict(color='black'),
+        textposition='inside',
+      		hovertemplate="Hybrid: %{y}" +
+      		"<extra></extra>",
+      		marker_color='grey')
+    
+    piece_type_data = [cube_trace, cone_trace, hybrid_trace]
 
     piece_type_layout = go.Layout(
         barmode='stack', 
@@ -237,7 +250,7 @@ def update_profile(select_team, session_database, session_analysis_database):
 
     
     piece_type_fig.update_yaxes(
-        range=[0, 10],
+        range=[0, 14],
         title_text="<b>Number of Game Pieces</b>")
 
     piece_type_fig.update_xaxes(
@@ -312,7 +325,7 @@ def update_profile(select_team, session_database, session_analysis_database):
       		"<extra></extra>",
       		marker_color='deepskyblue')
     
-    auto_low_scored = team_scouting_results['Auto Cones Low'] + team_scouting_results['Auto Cubes Low']
+    auto_low_scored = team_scouting_results['Auto Low']
 
     auto_low_trace = go.Bar(
         x=x,
@@ -432,7 +445,7 @@ def update_profile(select_team, session_database, session_analysis_database):
       		"<extra></extra>",
       		marker_color='deepskyblue')
 
-    tele_low_scored = team_scouting_results['Tele Cones Low'] + team_scouting_results['Tele Cubes Low']
+    tele_low_scored = team_scouting_results['Tele Low']
 
     tele_low_trace = go.Bar(
         x=x,
@@ -481,7 +494,7 @@ def update_profile(select_team, session_database, session_analysis_database):
     tele_grid_fig.update_yaxes(automargin='top')
 
     tele_grid_fig.update_yaxes(
-        range=[0, 10],
+        range=[0, 14],
         title_text="<b>Number of Game Pieces</b>")
 
     tele_grid_fig.update_xaxes(
@@ -560,7 +573,11 @@ def update_profile(select_team, session_database, session_analysis_database):
     
     # cones_count_series = (
     #     ((team_scouting_results['Auto Cones Top'] + team_scouting_results['Tele Cones Top'])) +
-    #     ((team_scouting_results['Auto Cones Mid'] + team_scouting_results['Tele Cones Mid'])) +
+    #     ((team_scouting_results['Auto Cones 
+    # 
+    # 
+    # 
+    # Mid'] + team_scouting_results['Tele Cones Mid'])) +
     #     ((team_scouting_results['Auto Cones Low'] + team_scouting_results['Tele Cones Low'])))
     # cones_count_series.rename('Cones', inplace=True)
     
@@ -589,7 +606,12 @@ def update_profile(select_team, session_database, session_analysis_database):
     #         x=0.5
     #     ))
     
-    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, data, columns]
+    options = scouting_results['Team Number'].unique().tolist()
+    options.remove('')
+    options.sort()
+    print(options)
+    
+    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, data, columns, options]
 
 
 
