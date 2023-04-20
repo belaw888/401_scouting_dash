@@ -31,7 +31,7 @@ class tba_data_validation:
         
         # # print(sheets_data['tba_key'])
         
-        event_data = tba.event_data('2023chcmp')
+        event_data = tba.event_data('2023gcmp')
         # match_keys = event_data['key'].to_dict()
         # alliances = event_data['alliances'].to_dict()
         
