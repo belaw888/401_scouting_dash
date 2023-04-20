@@ -25,7 +25,7 @@ sheets_data = sheets.get_google_sheets_dataframe()
 teams_list = sheets.get_team_list()
 
 tba = tbapy.tba_api_requests('tba_api_key.txt')
-event_key = 'gcmp'
+event_key = 'gal'
 
 def update_matches(event_key):
     match_keys = tba.event_match_keys(event_key)
