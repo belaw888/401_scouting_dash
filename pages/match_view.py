@@ -46,6 +46,8 @@ def update_matches(event_key):
 # match_keys.sort(key=lambda x: int(x.split('m')[1]) if 'f' not in x else max(match_nums) + int(x.split('f')[1].split('m')[0]))
 # print(sorted_matches[0])
 
+match_list = update_matches(event_key)
+
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
 config = {'displayModeBar': False}
 
@@ -62,7 +64,7 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_match := dcc.Dropdown(
-                id='select_match',
+                options=match_list,
                 value='qm1',
                 persistence=True,
                 multi=False,
