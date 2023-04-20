@@ -27,7 +27,7 @@ teams_list = sheets.get_team_list()
 tba = tbapy.tba_api_requests('tba_api_key.txt')
 event_key = '2023chcmp'
 
-def update_matches():
+def update_matches(event_key):
     match_keys = tba.event_match_keys(event_key)
     match_keys = [key.split('_')[1] for key in match_keys]
     sort_match = lambda x: int(x.split('m')[1])
@@ -52,12 +52,18 @@ config = {'displayModeBar': False}
 # print(columns)
 
 layout = dbc.Container([
+    # dbc.Row([
+    #     dcc.Input(
+    #         id="test_input",
+    #         type='text',
+    #         placeholder="lol")
+    #         ]),
+    # html.Br(),
     dbc.Row([
         dbc.Col([
             select_match := dcc.Dropdown(
-                options=update_matches(),
-                value=update_matches()[0],
                 id='select_match',
+                value='qm1',
                 persistence=True,
                 multi=False,
                 searchable=False,
@@ -92,16 +98,21 @@ layout = dbc.Container([
 @callback(
     [
         Output(teams, component_property='children'),
+        Output(select_match, 'options'),
     ],
     [
     	Input(select_match, component_property='value'),
-        Input('session_analysis_database', 'data')
+        Input('session_analysis_database', 'data'),
+        # Input('test_input', 'value')
     ]
 )
 def update_profile(select_match, session_analysis_database):
+    # print(type(test_input))
     analysis = sheets.parse_json(session_analysis_database)
     
-    match_key = event_key + '_' + select_match
+    match_key = str(event_key) + '_' + select_match
+    
+    print(match_key)
     
     match_robots = tba.match_robots(match_key)
     # print(match_robots)
@@ -129,7 +140,7 @@ def update_profile(select_match, session_analysis_database):
     
     green = px.colors.qualitative.Plotly[2]
     purple = px.colors.qualitative.Plotly[0]
-    blue = px.colors.qualitative.Plotly[5]
+    blue = px.colors.qualitative.G10[0]
     red = px.colors.qualitative.Plotly[1]
     yellow = 'gold'
     
@@ -157,12 +168,12 @@ def update_profile(select_match, session_analysis_database):
         top_cones = team_stats['Top Cones']
         mid_cubes = team_stats['Mid Cubes']
         mid_cones = team_stats['Mid Cones']
-        low_cubes = team_stats['Low Cubes']
-        low_cones = team_stats['Low Cones']
+    
         
         total_points = team_stats['Total Points']
         total_cubes_series = team_stats['Total Cubes']
         total_cones_series = team_stats['Total Cones']
+        total_hybrid_series = team_stats['Low Pieces']
         
         if team in blue_teams:
             blue_bar_points_charge.append(avg_charge_points)
@@ -199,22 +210,22 @@ def update_profile(select_match, session_analysis_database):
         team_avgs = pd.DataFrame(
             [{"Cones Scored": total_cones_series.sum(), "Cubes Scored": total_cubes_series.sum(), 'Top Cones': top_cones.sum()}])
 
-        colors = [px.colors.qualitative.Plotly[0], 'gold', px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[5], px.colors.qualitative.Plotly[5], px.colors.qualitative.Plotly[1], px.colors.qualitative.Plotly[1]]
+        colors = [px.colors.qualitative.Plotly[0], 'gold', 'grey',px.colors.qualitative.Plotly[2], px.colors.qualitative.Plotly[2], blue]
 
         # print(team_avgs)
         # pieces_pie_chart = go.Figure(data=[go.Pie(labels=team_avgs.columns, values=team_avgs.iloc[0])])
         pieces_pie_chart = go.Figure(
                                        data=[go.Sunburst( 
-                                       labels=['Cubes', 'Cones', 'Top Cubes', 'Top Cones', 'Mid Cubes', 'Mid Cones', 'Low Cubes', 'Low Cones'],
-                                       parents=['',     '',       'Cubes',    'Cones',     'Cubes',     'Cones',     'Cubes',     'Cones'],
-                                       values=[total_cubes_series.sum(),
+                                       labels=['Cubes', 'Cones', 'Hybrid', 'Top Cubes', 'Top Cones', 'Mid Cubes', 'Mid Cones',],
+                                       parents=['',     '',       '',   'Cubes',    'Cones',     'Cubes',     'Cones',     ],
+                                 values=[total_cubes_series.sum(),
                                                total_cones_series.sum(),
+                                               total_hybrid_series.sum(),
                                                top_cubes.sum(),
                                                top_cones.sum(),
                                                mid_cubes.sum(),
                                                mid_cones.sum(),
-                                               low_cubes.sum(),
-                                               low_cones.sum()],
+                                               ],
                                        branchvalues='total'
                                                                         )])
         pieces_pie_chart.update_traces(hoverinfo='label+value', textinfo='percent root',
@@ -322,9 +333,9 @@ def update_profile(select_match, session_analysis_database):
         html.Span('Cones', style={'color': yellow}, id='color_word'),
         html.Span(' v '),
         html.Span('Cubes', style={'color': purple}, id='color_word'),
-        html.Span(' - '),
-        html.Span('Low', style={'color': red}, id='color_word'),
         html.Span(' v '),
+        html.Span('Hybrid', style={'color': 'grey'}, id='color_word'),
+        html.Span(' - '),
         html.Span('Mid', style={'color': blue}, id='color_word'),
         html.Span(' v '),
         html.Span('High', style={'color': green}, id='color_word')], className='text-center text-black bg-light mb-0 border border-3 py-1 fs-5')))
@@ -344,5 +355,11 @@ def update_profile(select_match, session_analysis_database):
     filler2 = [dbc.Row([dbc.Col(dcc.Graph(figure=i, id='bar_points_contribution', className='text-center bg-light border border-3'), width=6) for i in bar])] 
 
     filler3 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(1, 3)])] 
+    
+    options = update_matches(event_key)
+    # value = update_matches()[0],
 
-    return [[teams_layout] + [min_avg_max_label] + filler + [pie_chart_label] + filler1 + [tele_pieces_label] + filler0 + [auto_pieces_label] + auto_pieces + filler2 + filler3]
+    
+    
+
+    return [teams_layout] + [min_avg_max_label] + filler + [pie_chart_label] + filler1 + [tele_pieces_label] + filler0 + [auto_pieces_label] + auto_pieces + filler2 + filler3, options
