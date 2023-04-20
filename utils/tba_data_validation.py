@@ -23,7 +23,7 @@ class tba_data_validation:
         combined = sheets_data['Match Type'].combine(
         sheets_data['Match Number'], (lambda x1, x2: x1 + str(x2)))
         
-        combined = combined.apply(lambda x: '2023chcmp_' + x)
+        combined = combined.apply(lambda x: '2023gal_' + x)
         
         sheets_data['tba_key'] = combined
         # print(sheets_data)
@@ -31,7 +31,7 @@ class tba_data_validation:
         
         # # print(sheets_data['tba_key'])
         
-        event_data = tba.event_data('gal')
+        event_data = tba.event_data('2023gal')
         # match_keys = event_data['key'].to_dict()
         # alliances = event_data['alliances'].to_dict()
         
