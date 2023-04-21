@@ -27,7 +27,6 @@ teams_list = sheets.get_team_list()
 tba = tbapy.tba_api_requests('tba_api_key.txt')
 event_key = '2023gal'
 
-
 def update_matches(event_key):
     match_keys = tba.event_match_keys(event_key)
     match_keys = [key.split('_')[1] for key in match_keys]
@@ -49,6 +48,8 @@ def update_matches(event_key):
 # match_keys.sort(key=lambda x: int(x.split('m')[1]) if 'f' not in x else max(match_nums) + int(x.split('f')[1].split('m')[0]))
 # print(sorted_matches[0])
 
+match_list = update_matches(event_key)
+
 columns = [{'name': i, 'id': i} for i in sheets_data.columns]
 config = {'displayModeBar': False}
 
@@ -65,8 +66,10 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_match := dcc.Dropdown(
+
                 options=['qm1', 'qm2', 'qm3', 'qm4', 'qm5', 'qm6', 'qm7', 'qm8', 'qm9', 'qm10', 'qm11', 'qm12', 'qm13', 'qm14', 'qm15', 'qm16', 'qm17', 'qm18', 'qm19', 'qm20', 'qm21', 'qm22', 'qm23', 'qm24', 'qm25', 'qm26', 'qm27', 'qm28', 'qm29', 'qm30', 'qm31', 'qm32', 'qm33', 'qm34', 'qm35', 'qm36', 'qm37', 'qm38', 'qm39', 'qm40', 'qm41', 'qm42', 'qm43', 'qm44', 'qm45', 'qm46', 'qm47', 'qm48', 'qm49', 'qm50', 'qm51', 'qm52', 'qm53', 'qm54', 'qm55', 'qm56', 'qm57', 'qm58', 'qm59', 'qm60', 'qm61', 'qm62', 'qm63', 'qm64', 'qm65', 'qm66', 'qm67','qm68', 'qm69', 'qm70', 'qm71', 'qm72', 'qm73', 'qm74', 'qm75', 'qm76', 'qm77', 'qm78', 'qm79', 'qm80', 'qm81', 'qm82', 'qm83', 'qm84', 'qm85', 'qm86', 'qm87', 'qm88', 'qm89', 'qm90', 'qm91', 'qm92', 'qm93', 'qm94', 'qm95', 'qm96', 'qm97', 'qm98', 'qm99', 'qm100', 'qm101', 'qm102', 'qm103', 'qm104', 'qm105', 'qm106', 'qm107', 'qm108', 'qm109', 'qm110', 'qm111', 'qm112', 'qm113', 'qm114', 'qm115', 'qm116', 'qm117', 'qm118', 'qm119', 'qm120', 'qm121', 'qm122', 'qm123', 'qm124', 'qm125', 'qm126', 'qm127', 'qm128', 'qm129',  'sf1m1', 'sf2m1', 'sf3m1', 'sf4m1', 'sf5m1', 'sf6m1', 'sf7m1', 'sf8m1', 'sf9m1', 'sf10m1', 'sf11m1', 'sf12m1', 'sf13m1', 'f1m1', 'f1m2'],
                 id='select_match',
+
                 value='qm1',
                 persistence=True,
                 multi=False,
@@ -361,9 +364,6 @@ def update_profile(select_match, session_analysis_database):
 
     filler3 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(1, 3)])] 
     
-    # options = update_matches(event_key)
-    # value = update_matches()[0],
-
     
     
 
