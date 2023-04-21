@@ -28,8 +28,8 @@ class sheets_data_manager:
         self.credentials = pygsheets.authorize(
             service_file=#'/home/belawilliams/Documents/team-401-scouting-credentials-2023.json')
             '/etc/secrets/team-401-scouting-credentials-2023.json')
-        print(self.credentials.drive.list(q="mimeType='application/vnd.google-apps.spreadsheet'",
-                      fields="files(name, parents), nextPageToken, incompleteSearch"))
+        # print(self.credentials.drive.list(q="mimeType='application/vnd.google-apps.spreadsheet'",
+        #               fields="files(name, parents), nextPageToken, incompleteSearch"))
         self.google_sheet = self.credentials.open(
             '[401 & 836 Scouting] - WORLDS - 2023 Charged Up Database')
         self.worksheet = self.google_sheet.worksheet('title', 'parsed_836')

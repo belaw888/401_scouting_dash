@@ -22,6 +22,7 @@ sheets_data = sheets.get_google_sheets_dataframe()
 validate = utils.tba_data_validation.tba_data_validation()
 
 
+
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.DARKLY, dbc.icons.FONT_AWESOME],
            meta_tags=[{'name': 'viewport',
                        'content': 'width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=0.8'}])

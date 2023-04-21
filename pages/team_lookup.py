@@ -35,6 +35,8 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_team := dcc.Dropdown(
+                options=[59, 67, 103, 157, 401, 461, 599, 702, 836, 948, 968, 1114, 1165, 1318, 1591, 1622, 1678, 1690, 1701, 1708, 1902, 2194, 2337, 2383, 2551, 2614, 2630, 2714, 2771, 2830, 2834, 2881, 2910, 3005, 3042, 3229, 3467, 3476, 3534,
+                         3536, 3539, 3603, 3996, 4009, 4381, 4415, 4422, 4451, 4481, 4571, 4786, 5010, 5166, 5199, 5427, 5557, 5586, 5801, 5985, 5987, 6702, 6722, 6800, 7197, 7258, 7451, 7461, 7657, 8013, 8033, 9031, 9072, 9097, 9105, 9120, 9128, 9138],
                              value=401,
                              id='select_team',
                              persistence=True,
@@ -155,7 +157,7 @@ layout = dbc.Container([
         Output(piece_type_graph, 'figure'),
         Output(auto_charge_table, 'data'),
         Output(auto_charge_table, 'columns'),
-        Output(select_team, 'options'),
+        # Output(select_team, 'options'),
     ],
     [
     	Input(select_team, component_property='value'),
@@ -606,12 +608,12 @@ def update_profile(select_team, session_database, session_analysis_database):
     #         x=0.5
     #     ))
     
-    options = scouting_results['Team Number'].unique().tolist()
-    options.remove('')
-    options.sort()
-    print(options)
+    # options = scouting_results['Team Number'].unique().tolist()
+    # options.remove('')
+    # options.sort()
+    # print(options)
     
-    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, data, columns, options]
+    return [f'{nickname}', f'{city}, {state_prov}', auto_grid_fig, tele_grid_fig, piece_type_fig, data, columns]
 
 
 

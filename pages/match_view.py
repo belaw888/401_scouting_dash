@@ -25,7 +25,8 @@ sheets_data = sheets.get_google_sheets_dataframe()
 teams_list = sheets.get_team_list()
 
 tba = tbapy.tba_api_requests('tba_api_key.txt')
-event_key = '2023chcmp'
+event_key = '2023gal'
+
 
 def update_matches(event_key):
     match_keys = tba.event_match_keys(event_key)
@@ -40,6 +41,8 @@ def update_matches(event_key):
     sorted_matches = qm + sf + f
     return sorted_matches
     
+
+# print(update_matches('2023chcmp'))
 # sf = 
 # f = 
 # match_nums = [int(key.split('m')[1]) for key in match_keys]
@@ -62,6 +65,7 @@ layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             select_match := dcc.Dropdown(
+                options=['qm1', 'qm2', 'qm3', 'qm4', 'qm5', 'qm6', 'qm7', 'qm8', 'qm9', 'qm10', 'qm11', 'qm12', 'qm13', 'qm14', 'qm15', 'qm16', 'qm17', 'qm18', 'qm19', 'qm20', 'qm21', 'qm22', 'qm23', 'qm24', 'qm25', 'qm26', 'qm27', 'qm28', 'qm29', 'qm30', 'qm31', 'qm32', 'qm33', 'qm34', 'qm35', 'qm36', 'qm37', 'qm38', 'qm39', 'qm40', 'qm41', 'qm42', 'qm43', 'qm44', 'qm45', 'qm46', 'qm47', 'qm48', 'qm49', 'qm50', 'qm51', 'qm52', 'qm53', 'qm54', 'qm55', 'qm56', 'qm57', 'qm58', 'qm59', 'qm60', 'qm61', 'qm62', 'qm63', 'qm64', 'qm65', 'qm66', 'qm67','qm68', 'qm69', 'qm70', 'qm71', 'qm72', 'qm73', 'qm74', 'qm75', 'qm76', 'qm77', 'qm78', 'qm79', 'qm80', 'qm81', 'qm82', 'qm83', 'qm84', 'qm85', 'qm86', 'qm87', 'qm88', 'qm89', 'qm90', 'qm91', 'qm92', 'qm93', 'qm94', 'qm95', 'qm96', 'qm97', 'qm98', 'qm99', 'qm100', 'qm101', 'qm102', 'qm103', 'qm104', 'qm105', 'qm106', 'qm107', 'qm108', 'qm109', 'qm110', 'qm111', 'qm112', 'qm113', 'qm114', 'qm115', 'qm116', 'qm117', 'qm118', 'qm119', 'qm120', 'qm121', 'qm122', 'qm123', 'qm124', 'qm125', 'qm126', 'qm127', 'qm128', 'qm129',  'sf1m1', 'sf2m1', 'sf3m1', 'sf4m1', 'sf5m1', 'sf6m1', 'sf7m1', 'sf8m1', 'sf9m1', 'sf10m1', 'sf11m1', 'sf12m1', 'sf13m1', 'f1m1', 'f1m2'],
                 id='select_match',
                 value='qm1',
                 persistence=True,
@@ -98,7 +102,7 @@ layout = dbc.Container([
 @callback(
     [
         Output(teams, component_property='children'),
-        Output(select_match, 'options'),
+        # Output(select_match, 'options'),
     ],
     [
     	Input(select_match, component_property='value'),
@@ -115,7 +119,8 @@ def update_profile(select_match, session_analysis_database):
     print(match_key)
     
     match_robots = tba.match_robots(match_key)
-    # print(match_robots)
+    
+    print(match_robots)
     team_nums = [int(num.split('c')[1]) for num in match_robots]
     blue_teams = team_nums[:3]
     red_teams = team_nums[3:]
@@ -356,10 +361,10 @@ def update_profile(select_match, session_analysis_database):
 
     filler3 = [dbc.Row([dbc.Col(html.Div(i, className='text-center bg-light border border-3')) for i in range(1, 3)])] 
     
-    options = update_matches(event_key)
+    # options = update_matches(event_key)
     # value = update_matches()[0],
 
     
     
 
-    return [teams_layout] + [min_avg_max_label] + filler + [pie_chart_label] + filler1 + [tele_pieces_label] + filler0 + [auto_pieces_label] + auto_pieces + filler2 + filler3, options
+    return [[teams_layout] + [min_avg_max_label] + filler + [pie_chart_label] + filler1 + [tele_pieces_label] + filler0 + [auto_pieces_label] + auto_pieces + filler2 + filler3]
