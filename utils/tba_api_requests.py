@@ -85,3 +85,7 @@ class tba_api_requests:
         json_data = self.tba.event_matches(event_key)
         data = self.tbapy_to_dataframe(json_data)
         return data
+
+
+# b = tba_api_requests('tba_api_key.txt')
+# print(b.event_match_keys('2023gal'))
